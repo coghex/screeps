@@ -5,6 +5,7 @@ var utilMem = require('util.mem');
 
 module.exports.loop = function () {
     var s = Game.spawns['Spawn1'];
+    Memory.level = s.memory.level;
     if (s.memory.init != null) {
         botBase.run(s);
         botCreepSpawner.run(s);
