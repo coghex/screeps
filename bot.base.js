@@ -65,7 +65,27 @@ var botBase = {
                 }
             }
         }
+        function setNHarv(r, sources, i) {
+            var ret = 0;
+            if (i) {
+                for (var k = 0; k < 10; k++) {
+                    var kx = (k % 3) - 1;
+                    var ky = (k / 3) - 1;
+                    var pos = new RoomPosition(sources[i].pos.x+kx, sources[i].pos.y+ky, r.name);
+                    r.lookAt(pos).forEach(function(object) {
+                        if ((object.type == LOOK_CREEPS) && (object.creep.my)) {
+                            ret += 1;
+                        }
+                    });
+                }
+            }
+            r.memory.nharvs[i] = ret;
+        }
         var r = s.room;
+        var sources = r.find(FIND_SOURCES);
+        for (var i in sources) {
+            setNHarv(r, sources, i)
+        }
         var nextensions = s.memory.ext.length;
         if (Game.time < 100) {
             //console.log("too early to extend");

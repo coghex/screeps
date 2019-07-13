@@ -58,15 +58,18 @@ var roleHarvester = {
                 creep.memory.job = "null"
                 creep.memory.utility = -100;
             }
-	        if (creep.carry.energy < creep.carryCapacity) {
+	    if (creep.carry.energy < creep.carryCapacity) {
                 var sources = creep.room.find(FIND_SOURCES);
                 var source = sources[0];
-                for (var s in sources) {
-                //    var i = creep.room.memory.sourceid.findIndex(sources[s].id);
-                //    if (creep.room.memory.nharvs[i] < creep.room.memory.maxnharvs[i]) {
-                //        creep.room.memory.nharvs[i] += 1;
-                //    }
-                //    source = sources[s];
+                var minlength = 100;
+                for (var i in sources) {
+                    var length = creep.pos.findPathTo(sources[i].pos).length;
+                    if (length < minlength) {
+                        if (creep.room.memory.nharvs[i] <= creep.room.memory.maxnharvs[i]) {
+                            source = sources[i];
+                            minlength = length;
+                        }
+                    }
                 }
                 if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
@@ -125,8 +128,19 @@ var roleHarvester = {
             }
             else {
                 var sources = creep.room.find(FIND_SOURCES);
-                if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+                var source = sources[0];
+                var minlength = 100;
+                for (var i in sources) {
+                    var length = creep.pos.findPathTo(sources[i].pos).length;
+                    if (length < minlength) {
+                        if (creep.room.memory.nharvs[i] <= creep.room.memory.maxnharvs[i]) {
+                            source = sources[i];
+                            minlength = length;
+                        }
+                    }
+                }
+                if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
                     creep.memory.utility -= 1;
                 }
                 else {
@@ -167,8 +181,19 @@ var roleHarvester = {
             }
             else {
                 var sources = creep.room.find(FIND_SOURCES);
-                if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+                var source = sources[0];
+                var minlength = 100;
+                for (var i in sources) {
+                    var length = creep.pos.findPathTo(sources[i].pos).length;
+                    if (length < minlength) {
+                        if (creep.room.memory.nharvs[i] <= creep.room.memory.maxnharvs[i]) {
+                            source = sources[i];
+                            minlength = length;
+                        }
+                    }
+                }
+                if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
                 }
                 else {
                     creep.memory.utility += 1;
