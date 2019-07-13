@@ -49,7 +49,7 @@ var botBase = {
             var sloc = s.pos;
             var cloc = r.find(FIND_SOURCES);
             for (var i in cloc) {
-                path = r.findPath(sloc, cloc[i], {ignoreCreeps: true, ignoreDestructableStructures: true, ignoreRoads: true});
+                var path = r.findPath(sloc, cloc[i], {ignoreCreeps: true, ignoreDestructableStructures: true, ignoreRoads: true});
                 for (var j in path) {
                     r.createConstructionSite(path[i].x, path[i].y, STRUCTURE_ROAD);
                 }
@@ -59,7 +59,7 @@ var botBase = {
             var sloc = r.controller.pos;
             var cloc = r.find(FIND_SOURCES);
             for (var i in cloc) {
-                path = r.findPath(sloc, cloc[i], {ignoreCreeps: true, ignoreDestructableStructures: true, ignoreRoads: true});
+                var path = r.findPath(sloc, cloc[i], {ignoreCreeps: true, ignoreDestructableStructures: true, ignoreRoads: true});
                 for (var j in path) {
                     r.createConstructionSite(path[i].x, path[i].y, STRUCTURE_ROAD);
                 }
@@ -68,15 +68,21 @@ var botBase = {
         function setNHarv(r, sources, i) {
             var ret = 0;
             if (i) {
-                for (var k = 0; k < 10; k++) {
-                    var kx = (k % 3) - 1;
-                    var ky = (k / 3) - 1;
-                    var pos = new RoomPosition(sources[i].pos.x+kx, sources[i].pos.y+ky, r.name);
-                    r.lookAt(pos).forEach(function(object) {
-                        if ((object.type == LOOK_CREEPS) && (object.creep.my)) {
-                            ret += 1;
-                        }
-                    });
+                //for (var k = 0; k < 10; k++) {
+                //    var kx = (k % 3) - 1;
+                //    var ky = (k / 3) - 1;
+                //    var pos = new RoomPosition(sources[i].pos.x+kx, sources[i].pos.y+ky, r.name);
+                //    r.lookAt(pos).forEach(function(object) {
+                //        if ((object.type == LOOK_CREEPS) && (object.creep.my)) {
+                //            ret += 1;
+                //        }
+                //    });
+                //}
+                for (var name in Game.creeps) {
+                    var creep = Game.creeps[name];
+                    if(creep.memory.dest == i) {
+                        ret += 1;
+                    }
                 }
             }
             r.memory.nharvs[i] = ret;
