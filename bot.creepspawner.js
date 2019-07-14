@@ -3,7 +3,7 @@ var botCreepSpawner = {
         var nharv = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester').length;
         var lvl = s.memory.level;
         if (lvl == 1) {
-            if (nharv < 8) {
+            if (nharv < 2*s.room.memory.sourceid.length) {
                 var name = 'harvy' + Game.time;
                 s.spawnCreep([WORK,CARRY,MOVE], name, {memory: {role: 'harvester', dest : -1 }});
                 //Game.creeps[name].memory.job = "null";
@@ -15,7 +15,7 @@ var botCreepSpawner = {
             }
         }
         else if (lvl == 2) {
-            if (nharv < 12) {
+            if (nharv < 3*s.room.memory.sourceid.length) {
                 var name = 'harvymkii' + Game.time;
                 s.spawnCreep([WORK,WORK,CARRY,CARRY,MOVE,MOVE], name, {memory: {role: 'harvester', dest : -1 }});
                 //Game.creeps[name].memory.job = "null";
@@ -27,9 +27,9 @@ var botCreepSpawner = {
             }
         }
         else if (lvl == 3) {
-            if (nharv < 16) {
+            if (nharv < 4*s.room.memory.sourceid.length) {
                 var name = 'harvymkiii' + Game.time;
-                s.spawnCreep([WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE], name, {memory: {role: 'harvester', dest : -1 }});
+                s.spawnCreep([WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE], name, {memory: {role: 'harvester', dest : -1 }});
                 //Game.creeps[name].memory.job = "null";
                 //Game.creeps[name].memory.utility = 0;
             }

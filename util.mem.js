@@ -1,7 +1,7 @@
 var utilMem = {
     init: function() {
         Memory.level = 0;
-        Game.spawns['Spawn1'].memory = { "level" : 1, "ext" : [], "controllercon" : 0, "resourcecon" : 0 };
+        Game.spawns['Spawn1'].memory = { "level" : 1, "ext" : [], "controllercon" : 0, "spawncon" : 0, "sourcecon" : 0, "sourcon" : 0, "exitcon" : 0 };
         Game.spawns['Spawn1'].room.memory = { "sourceid" : [], "maxnharvs" : [], "nharvs" : [] };
         const terrain = Game.spawns['Spawn1'].room.getTerrain();
         var sources = Game.spawns['Spawn1'].room.find(FIND_SOURCES);

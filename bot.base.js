@@ -41,43 +41,76 @@ var botBase = {
             var cloc = r.controller.pos;
             var path = r.findPath(sloc, cloc, {ignoreCreeps: true, ignoreDestructableStructures: true, ignoreRoads: true});
             for (var i in path) {
-                r.createConstructionSite(path[i].x, path[i].y, STRUCTURE_ROAD);
+                var ret = 0;
+                var pos = new RoomPosition(path[i].x, path[i].y, r.name);
+                r.lookAt(pos).forEach(function(object) {
+                    if ((object.type == LOOK_STRUCTURES)) {
+                        ret += 1;
+                    }
+                });
+                if (ret == 0) {
+                    r.createConstructionSite(path[i].x, path[i].y, STRUCTURE_ROAD);
+                }
             }
             s.memory.controllercon = path.length;
         }
-        function roadSpawnToSource(s, r) {
+        function roadSpawnToSource(n, s, r) {
             var sloc = s.pos;
             var cloc = r.find(FIND_SOURCES);
             for (var i in cloc) {
-                var path = r.findPath(sloc, cloc[i], {ignoreCreeps: true, ignoreDestructableStructures: true, ignoreRoads: true});
-                for (var j in path) {
-                    r.createConstructionSite(path[i].x, path[i].y, STRUCTURE_ROAD);
+                if (i > s.memory.sourcen) {
+                    break;
+                }
+                var enemy = 0;
+                for (var k = 0; k < 26; k++) {
+                    var kx = (k % 6) - 2;
+                    var ky = (k / 6) - 2;
+                    var pos = new RoomPosition(sloc.x+kx, sloc.y+ky, r.name);
+                    r.lookAt(pos).forEach(function(object) {
+                        if ((object.type == LOOK_CREEPS) && (!object.creep.my)) {
+                            enemy += 1;
+                        }
+                    });
+                }
+                if (!enemy) {
+                    var path = r.findPath(sloc, cloc[i], {ignoreCreeps: true, ignoreDestructableStructures: true, ignoreRoads: true});
+                    for (var j in path) {
+                        var ret = 0;
+                        var pos = new RoomPosition(path[j].x, path[j].y, r.name);
+                        r.lookAt(pos).forEach(function(object) {
+                            if ((object.type == LOOK_STRUCTURES)) {
+                                ret += 1;
+                            }
+                        });
+                        if (ret == 0) {
+                            r.createConstructionSite(path[j].x, path[j].y, STRUCTURE_ROAD);
+                        }
+                    }
                 }
             }
         }
         function roadSourceToController(s, r) {
-            var sloc = r.controller.pos;
-            var cloc = r.find(FIND_SOURCES);
+            const sloc = r.controller.pos;
+            const cloc = r.find(FIND_SOURCES);
             for (var i in cloc) {
                 var path = r.findPath(sloc, cloc[i], {ignoreCreeps: true, ignoreDestructableStructures: true, ignoreRoads: true});
                 for (var j in path) {
-                    r.createConstructionSite(path[i].x, path[i].y, STRUCTURE_ROAD);
+                    var ret = 0;
+                    var pos = new RoomPosition(path[j].x, path[j].y, r.name);
+                    r.lookAt(pos).forEach(function(object) {
+                        if ((object.type== LOOK_STRUCTURES)) {
+                            ret += 1;
+                        }
+                    });
+                    if (ret == 0) {
+                        r.createConstructionSite(path[j].x, path[j].y, STRUCTURE_ROAD);
+                    }
                 }
             }
         }
         function setNHarv(r, sources, i) {
             var ret = 0;
             if (i) {
-                //for (var k = 0; k < 10; k++) {
-                //    var kx = (k % 3) - 1;
-                //    var ky = (k / 3) - 1;
-                //    var pos = new RoomPosition(sources[i].pos.x+kx, sources[i].pos.y+ky, r.name);
-                //    r.lookAt(pos).forEach(function(object) {
-                //        if ((object.type == LOOK_CREEPS) && (object.creep.my)) {
-                //            ret += 1;
-                //        }
-                //    });
-                //}
                 for (var name in Game.creeps) {
                     var creep = Game.creeps[name];
                     if(creep.memory.dest == i) {
@@ -111,13 +144,29 @@ var botBase = {
         if (roads.length < 9) {
             buildRoads((roads.length), s, r);
         }
-        else if (!s.memory.controllercon) {
+        else if ((Game.time % 10000) && (!s.memory.controllercon)) {
             roadSpawnToController(s, r);
-            roadSpawnToSource(s, r);
+        }
+        else if ((Game.time % 13000) && (s.memory.controllercon) && (!s.memory.spawncon)) {
+            roadSpawnToSource(s.memory.sourcen, s, r);
+            s.memory.sourcen += 1;
+        }
+        else if ((Game.time % 15000) && (s.memory.controllercon) && (s.memory.spawncon) && (!s.memory.sourcecon)) {
             roadSourceToController(s, r);
         }
         else {
             //console.log("no roads needed");
+        }
+        if ((roads.length > 10) && (r.find(FIND_MY_CONSTRUCTION_SITES).length == 0)) {
+            if (!s.memory.controllercon) {
+                s.memory.controllercon = 1;
+            }
+            else if (!s.memory.spawncon) {
+                s.memory.spawncon = 1;
+            }
+            else if (!s.memory.sourcecon) {
+                s.memory.sourcecon = 1;
+            }
         }
     }
 }
