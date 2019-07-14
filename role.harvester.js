@@ -380,13 +380,13 @@ var roleHarvester = {
                                 creep.moveTo(targ, {visualizePathStyle: {stroke: '#ffffff'}});
                             }
                             else {
-                                creep.memory.dest = -1;
+                                creep.memory.dest = -10;
                                 creep.memory.utility += 2;
                             }       
                         }
                         else {
                             //creep.memory.job = "null";
-                            creep.memory.utility -= 1;
+                            creep.memory.utility -= 10;
                             creep.memory.repairdest = null;
                         }
                     }
@@ -406,7 +406,7 @@ var roleHarvester = {
                         }
                         else {
                             creep.memory.dest = -1;
-                            creep.memory.utility += 2;
+                            creep.memory.utility += 5;
                         }
                     }
                 }
