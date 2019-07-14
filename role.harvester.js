@@ -1,5 +1,9 @@
 var roleHarvester = {
     run: function(creep) {
+        if ((creep.hits < creep.hitsMax) && (creep.memory.job != "flee")) {
+            creep.memory.job = "flee";
+            creep.memory.utility = 100;
+        }
         var arr = [];
         for (const i in Game.creeps) {
             arr.push(Game.creeps[i].memory.job);
@@ -9,8 +13,9 @@ var roleHarvester = {
         var nbldr = arr.filter(j => (j == "bldr")).length;
         var nrepr = arr.filter(j => (j == "repr")).length;
 
-        var rand = Math.floor(Math.random()*5);
-        if (arr.length && (Game.time % 5 == rand)) {
+        //every tick has a one in eight chance to change the job
+        var rand = Math.floor(Math.random()*8);
+        if (arr.length && (Game.time % 8 == rand)) {
             //console.log("nharv: " + nharv + ". nupgd: " + nupgd + ", nbldr: " + nbldr + ", nrepr: " + nrepr);
             var powerscore = creep.room.energyCapacityAvailable - creep.room.energyAvailable;
             var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
@@ -52,7 +57,7 @@ var roleHarvester = {
 
             var maxscore = Math.max([bldrscore, upgdscore, harvscore, reprscore]);
             var util = creep.memory.utility + 10;
-            if ((util < harvscore) || (util < bldrscore) || (util < upgdscore) || (util < reprscore)) {
+            if (((util < harvscore) || (util < bldrscore) || (util < upgdscore) || (util < reprscore)) && (creep.memory.job != "flee")) {
                 if (harvscore > bldrscore) {
                     if (harvscore > upgdscore) {
                         if (harvscore > reprscore) {
@@ -98,6 +103,12 @@ var roleHarvester = {
                     }
                 }
             }
+            else if (creep.memory.job == "flee") {
+                if (creep.memory.utility <= 0) {
+                    creep.memory.job = "null";
+                    creep.memory.utility = -100;
+                }
+            }
             //if (util < maxscore) {
             //    if (maxscore <= harvscore) {
             //        creep.memory.job = "harv";
@@ -122,7 +133,7 @@ var roleHarvester = {
             creep.memory.job = "null";
             creep.memory.utility = -100;
         }
-        if (creep.memory.utility <= 0) {
+        if ((creep.memory.utility <= 0) && (creep.memory.job != "flee")) {
             creep.memory.job = "null"
             creep.memory.utility = -100;
         }
@@ -139,6 +150,16 @@ var roleHarvester = {
             creep.memory.utility = harvscore;
         }
         //creep.say(Math.round(creep.memory.utility));
+        if (creep.memory.job == "flee")  {
+            creep.memory.utility -= Memory.level;
+            var spawn = creep.room.find(FIND_STRUCTURES, {
+                filter: (struct) => {
+                    return (struct.structureType == STRUCTURE_SPAWN);
+                }
+            });
+            creep.drop(RESOURCE_ENERGY);
+            moveTo(Game.spawns['Spawn1'].pos);
+        }
         if (creep.memory.job == "harv") {
 	    if (creep.carry.energy < creep.carryCapacity) {
                 var sources = creep.room.find(FIND_SOURCES);
