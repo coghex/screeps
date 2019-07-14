@@ -10,7 +10,7 @@ module.exports.loop = function () {
             console.log("removing dead creep " + name);
         }
     }
-    var s = Game.spawns['Spawn1'];
+    const s = Game.spawns['Spawn1'];
     Memory.level = s.memory.level;
     if (s.memory.init != null) {
         botBase.run(s);

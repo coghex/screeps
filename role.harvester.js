@@ -14,8 +14,8 @@ var roleHarvester = {
         var nrepr = arr.filter(j => (j == "repr")).length;
 
         //every tick has a one in eight chance to change the job
-        var rand = Math.floor(Math.random()*8);
-        if (arr.length && (Game.time % 8 == rand)) {
+        var rand = Math.floor(Math.random()*(4*Memory.level));
+        if ((arr.length && (Game.time % (4*Memory.level) == rand)) || (arr.length && (creep.memory.job == "null"))) {
             //console.log("nharv: " + nharv + ". nupgd: " + nupgd + ", nbldr: " + nbldr + ", nrepr: " + nrepr);
             var powerscore = creep.room.energyCapacityAvailable - creep.room.energyAvailable;
             var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
@@ -31,16 +31,16 @@ var roleHarvester = {
             var harvscore = 100/(1+(3*nharv)/div);
             var reprscore = 100/(1+(6*nrepr)/div);
             if ((powerscore < 40)) {
-                harvscore -= 60;
+                harvscore -= 80;
                 upgdscore += 10;
                 bldrscore += 10;
             }
             else {
                 harvscore += 60;
-                upgdscore -= 60;
+                upgdscore -= 40;
             }
             if (buildscore < 1) {
-                bldrscore -= 60;
+                bldrscore -= 80;
                 upgdscore += 10;
             }
             else {
@@ -50,7 +50,7 @@ var roleHarvester = {
                 reprscore += 10;
             }
             else {
-                reprscore -= 60;
+                reprscore -= 80;
                 upgdscore += 10;
             }
             //console.log("harvscore: " + harvscore + ". upgdscore: " + upgdscore + ", bldrscore: " + bldrscore + ", reprscore: " + reprscore);
