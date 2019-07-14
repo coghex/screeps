@@ -8,7 +8,9 @@ var roleHarvester = {
         var nupgd = arr.filter(j => (j == "upgd")).length;
         var nbldr = arr.filter(j => (j == "bldr")).length;
         var nrepr = arr.filter(j => (j == "repr")).length;
-        if (arr.length) {
+
+        var rand = Math.floor(Math.random()*5);
+        if (arr.length && (Game.time % 5 == rand)) {
             //console.log("nharv: " + nharv + ". nupgd: " + nupgd + ", nbldr: " + nbldr + ", nrepr: " + nrepr);
             var powerscore = creep.room.energyCapacityAvailable - creep.room.energyAvailable;
             var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
@@ -24,7 +26,7 @@ var roleHarvester = {
             var harvscore = 100/(1+(3*nharv)/div);
             var reprscore = 100/(1+(6*nrepr)/div);
             if ((powerscore < 40)) {
-                harvscore -= 40;
+                harvscore -= 60;
                 upgdscore += 10;
                 bldrscore += 10;
             }
