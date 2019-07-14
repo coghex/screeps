@@ -224,7 +224,6 @@ var roleHarvester = {
                             else {
                                 creep.memory.dest = -1;
                                 creep.memory.utility += 2;
-                                creep.memory.builddest = null;
                             }       
                         }
                         else {
@@ -250,7 +249,6 @@ var roleHarvester = {
                         else {
                             creep.memory.dest = -1;
                             creep.memory.utility += 2;
-                            creep.memory.builddest = null;
                         }
                     }
                 }
