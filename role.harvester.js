@@ -14,31 +14,31 @@ var roleHarvester = {
             var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
             var buildscore = targets.length;
             var reprtargets = creep.room.find(FIND_STRUCTURES, {
-                filter: object => object.hits < object.hitsMax
+                filter: object => object.hits < (object.hitsMax-100)
             });
             var nreprtargets = reprtargets.length
             var ncreeps = arr.length;
             var div = Memory.level;
-            var bldrscore = 100-((40*nbldr)/div);
-            var upgdscore = 100-((45*nupgd)/div);
-            var harvscore = 100-((30*nharv)/div);
-            var reprscore = 100-((50*nrepr)/div);
+            var bldrscore = 100/((4*nbldr)/div);
+            var upgdscore = 100/((5*nupgd)/div);
+            var harvscore = 100/((3*nharv)/div);
+            var reprscore = 100/((6*nrepr)/div);
             if ((powerscore < 40)) {
-                harvscore -= 40;
+                harvscore -= 90;
             }
             else {
                 harvscore += 20;
                 upgdscore -= 20;
             }
             if (buildscore < 1) {
-                buildscore -= 40;
+                buildscore -= 90;
                 upgdscore += 10;
             }
             if (nreprtargets > 1) {
                 reprscore += 10;
             }
             else {
-                reprscore -= 40;
+                reprscore -= 90;
             }
             //console.log("harvscore: " + harvscore + ". upgdscore: " + upgdscore + ", bldrscore: " + bldrscore);
 
@@ -130,7 +130,7 @@ var roleHarvester = {
             creep.memory.job = "harv";
             creep.memory.utility = harvscore;
         }
-        creep.say(creep.memory.utility);
+        //creep.say(creep.memory.utility);
         if (creep.memory.job == "harv") {
 	    if (creep.carry.energy < creep.carryCapacity) {
                 var sources = creep.room.find(FIND_SOURCES);
@@ -367,7 +367,12 @@ var roleHarvester = {
                 var targets = creep.room.find(FIND_STRUCTURES, {
                     filter: object => object.hits < object.hitsMax
                 });
-                if (targets.length) {
+                if (targets == null) {
+                    creep.moveTo(s[0], {visualizePathStyle: {stroke: '#ff0000'}});
+                    creep.memory.job = "null";
+                    creep.memory.utility = 0;
+                }
+                else if (targets.length) {
                     if (creep.memory.reprdest != null) {
                         var targ = Game.getObjectById(creep.memory.reprdest);
                         if (targ != null) {
@@ -404,11 +409,6 @@ var roleHarvester = {
                             creep.memory.utility += 2;
                         }
                     }
-                }
-                else if (s.length) {
-                    creep.moveTo(s[0], {visualizePathStyle: {stroke: '#ff0000'}});
-                    creep.memory.job = "null";
-                    creep.memory.utility = 0;
                 }
             }
             else {
