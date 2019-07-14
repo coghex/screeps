@@ -1,5 +1,6 @@
 var roleHarvester = {
     run: function(creep) {
+        creep.say(creep.memory.utility);
         var arr = [];
         for (const i in Game.creeps) {
             arr.push(Game.creeps[i].memory.job);
@@ -19,10 +20,10 @@ var roleHarvester = {
             var buildscore = targets.length;
             var repairscore = repairtargets.length;
             var ncreeps = arr.length;
-            var bldrscore = 100-((20*nbldr)/ncreeps);
-            var upgdscore = 100-((20*nupgd)/ncreeps);
-            var harvscore = 100-((20*nharv)/ncreeps);
-            var reprscore = 100-((50*nrepr)/ncreeps);
+            var bldrscore = 100-((10*nbldr)/Memory.level);
+            var upgdscore = 100-((50*nupgd)/Memory.level);
+            var harvscore = 100-((20*nharv)/Memory.level);
+            var reprscore = 100-((50*nrepr)/Memory.level);
             if ((powerscore < 40)) {
                 harvscore -= 80;
             }
@@ -30,11 +31,13 @@ var roleHarvester = {
                 harvscore += 40;
             }
             if (buildscore < 1) {
-                bldrscore -= 80;
-                upgdscore += 40;
+                bldrscore -= 20;
+            }
+            else {
+                bldrscore += 40;
             }
             if (repairscore < 1) {
-                reprscore += 40;
+                reprscore += 20;
             }
             //console.log("harvscore: " + harvscore + ". upgdscore: " + upgdscore + ", bldrscore: " + bldrscore);
 
@@ -51,19 +54,19 @@ var roleHarvester = {
                 }
                 if (maxi == 0) {
                     creep.memory.job = "harv";
-                    creep.memory.utility = harvscore+12;
+                    creep.memory.utility = harvscore+1;
                 }
                 else if (maxi == 1) {
                     creep.memory.job = "bldr";
-                    creep.memory.utility = bldrscore+12;
+                    creep.memory.utility = bldrscore+1;
                 }
                 else if (maxi == 2) {
                     creep.memory.job = "upgd";
-                    creep.memory.utility = upgdscore+12;
+                    creep.memory.utility = upgdscore+1;
                 }
                 else if ((maxi == 3) && (creep.room.level > 1)) {
                     creep.memory.job = "repr";
-                    creep.memory.utility = reprscore+12;
+                    creep.memory.utility = reprscore+1;
                 }
                 //if (harvscore > bldrscore) {
                 //    if (harvscore > upgdscore) {
@@ -92,7 +95,6 @@ var roleHarvester = {
             creep.memory.job = "null";
             creep.memory.utility = -100;
         }
-        //creep.say(creep.memory.utility);
         if (creep.memory.utility <= 0) {
             creep.memory.job = "null"
             creep.memory.utility = -100;
