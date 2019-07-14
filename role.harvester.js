@@ -36,8 +36,9 @@ var roleHarvester = {
                 bldrscore += 10;
             }
             else {
-                harvscore += 60;
-                upgdscore -= 40;
+                harvscore += 70;
+                upgdscore -= 10;
+                bldrscore -= 10;
             }
             if (buildscore < 1) {
                 bldrscore -= 80;
@@ -173,7 +174,7 @@ var roleHarvester = {
                                 var ret = 0;
                                 for (var k = 0; k < 26; k++) {
                                     var kx = (k % 6) - 2;
-                                    var ky = (k / 6) - 2;
+                                    var ky = Math.floor(k / 6) - 2;
                                     var pos = new RoomPosition(sources[i].pos.x+kx, sources[i].pos.y+ky, creep.room.name);
                                     creep.room.lookAt(pos).forEach(function(object) {
                                         if ((object.type == LOOK_CREEPS) && (!object.creep.my)) {
@@ -257,7 +258,7 @@ var roleHarvester = {
                                 var ret = 0;
                                 for (var k = 0; k < 26; k++) {
                                     var kx = (k % 6) - 2;
-                                    var ky = (k / 6) - 2;
+                                    var ky = Math.floor(k / 6) - 2;
                                     var pos = new RoomPosition(sources[i].pos.x+kx, sources[i].pos.y+ky, creep.room.name);
                                     creep.room.lookAt(pos).forEach(function(object) {
                                         if ((object.type == LOOK_CREEPS) && (!object.creep.my)) {
@@ -356,7 +357,7 @@ var roleHarvester = {
                                 var ret = 0;
                                 for (var k = 0; k < 26; k++) {
                                     var kx = (k % 6) - 2;
-                                    var ky = (k / 6) - 2;
+                                    var ky = Math.floor(k / 6) - 2;
                                     var pos = new RoomPosition(sources[i].pos.x+kx, sources[i].pos.y+ky, creep.room.name);
                                     creep.room.lookAt(pos).forEach(function(object) {
                                         if ((object.type == LOOK_CREEPS) && (!object.creep.my)) {
@@ -453,7 +454,7 @@ var roleHarvester = {
                                 var ret = 0;
                                 for (var k = 0; k < 26; k++) {
                                     var kx = (k % 6) - 2;
-                                    var ky = (k / 6) - 2;
+                                    var ky = Math.floor(k / 6) - 2;
                                     var pos = new RoomPosition(sources[i].pos.x+kx, sources[i].pos.y+ky, creep.room.name);
                                     creep.room.lookAt(pos).forEach(function(object) {
                                         if ((object.type == LOOK_CREEPS) && (!object.creep.my)) {

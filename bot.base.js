@@ -2,16 +2,17 @@ var botBase = {
     run: function(s) {
         function buildExt(n, r, x, y) {
             var extlev = s.memory.level;
-            var nx = (n % (extlev*3))-extlev;
-            var ny = (n / (extlev*3))-extlev;
+            var nx = ((n % (extlev*3))-extlev);
+            var ny = (Math.floor(n / (extlev*3))-extlev);
             var err = r.createConstructionSite(x+nx,y+ny,STRUCTURE_EXTENSION);
-            if (n > 10) {
+            if (n > (10*extlev)) {
+                console.log("could not place all extensions");
                 return;
             }
-            if (err==(-14)) {
+            if ((err==(-8)) || (err==(-14))) {
                 //console.log("not ready for extensions yet");
             }
-            else if (err==(-7)) {
+            else if ((err==(-7)) || (err==(-10))) {
                 //console.log("cant build at " + x + ", " + y + " trying next location...");
                 buildExt((n+1), r, x, y);
             }
@@ -32,7 +33,7 @@ var botBase = {
         }
         function buildRoads(n, s, r) {
             var nx = (n % 3)-1;
-            var ny = (n / 3)-1;
+            var ny = Math.floor((n / 3))-1;
             var x = s.pos.x+nx;
             var y = s.pos.y+ny;
             buildRoad(r, x, y);
@@ -65,7 +66,7 @@ var botBase = {
                 var enemy = 0;
                 for (var k = 0; k < 26; k++) {
                     var kx = (k % 6) - 2;
-                    var ky = (k / 6) - 2;
+                    var ky = Math.floor(k / 6) - 2;
                     var pos = new RoomPosition(sloc.x+kx, sloc.y+ky, r.name);
                     r.lookAt(pos).forEach(function(object) {
                         if ((object.type == LOOK_CREEPS) && (!object.creep.my)) {
@@ -130,14 +131,11 @@ var botBase = {
         if (Game.time < 100) {
             //console.log("too early to extend");
         }
-        else if (s.room.energyAvailable < (s.room.energyCapacityAvailable-100)) {
+        else if (s.room.energyAvailable < (s.room.energyCapacityAvailable)) {
             //console.log("no need to extend yet");
         }
-        else if (nextensions < 5) {
+        else if (nextensions < (5*s.memory.level)) {
             //console.log("no extensions yet, lets see if we can...");
-            buildExt(nextensions, r, s.pos.x, s.pos.y);
-        }
-        if (r.controller.level == 3 && nextensions <= 5) {
             buildExt(nextensions, r, s.pos.x, s.pos.y);
         }
         var roads = r.find(FIND_STRUCTURES, {
