@@ -19,51 +19,53 @@ var roleHarvester = {
             var nreprtargets = reprtargets.length
             var ncreeps = arr.length;
             var div = Memory.level;
-            var bldrscore = 100/((2*nbldr)/div);
-            var upgdscore = 100/((3*nupgd)/div);
-            var harvscore = 100/((1*nharv)/div);
-            var reprscore = 100/((4*nrepr)/div);
+            var bldrscore = 100/(1+(4*nbldr)/div);
+            var upgdscore = 100/(1+(5*nupgd)/div);
+            var harvscore = 100/(1+(3*nharv)/div);
+            var reprscore = 100/(1+(6*nrepr)/div);
             if ((powerscore < 40)) {
-                harvscore -= 90;
+                harvscore -= 40;
+                upgdscore += 10;
             }
             else {
-                harvscore += 20;
-                upgdscore -= 20;
+                harvscore += 60;
+                upgdscore -= 60;
             }
             if (buildscore < 1) {
-                buildscore -= 90;
+                buildscore -= 60;
                 upgdscore += 10;
             }
             if (nreprtargets > 1) {
                 reprscore += 10;
             }
             else {
-                reprscore -= 90;
+                reprscore -= 60;
+                upgdscore += 10;
             }
-            //console.log("harvscore: " + harvscore + ". upgdscore: " + upgdscore + ", bldrscore: " + bldrscore);
+            //console.log("harvscore: " + harvscore + ". upgdscore: " + upgdscore + ", bldrscore: " + bldrscore + ", reprscore: " + reprscore);
 
             var maxscore = Math.max([bldrscore, upgdscore, harvscore, reprscore]);
-            var util = creep.memory.utility + 12;
+            var util = creep.memory.utility + 10;
             if ((util < harvscore) || (util < bldrscore) || (util < upgdscore) || (util < reprscore)) {
                 if (harvscore > bldrscore) {
                     if (harvscore > upgdscore) {
                         if (harvscore > reprscore) {
                             creep.memory.job = "harv";
-                            creep.memory.utility = harvscore+12;
+                            creep.memory.utility = harvscore+10;
                         }
                         else {
                             creep.memory.job = "repr";
-                            creep.memory.utility = reprscore+12;
+                            creep.memory.utility = reprscore+10;
                         }
                     }
                     else {
                         if (upgdscore > reprscore) {
                             creep.memory.job = "upgd";
-                            creep.memory.utility = upgdscore+12;
+                            creep.memory.utility = upgdscore+10;
                         }
                         else {
                             creep.memory.job = "repr";
-                            creep.memory.utility = reprscore+12;
+                            creep.memory.utility = reprscore+10;
                         }
                     }
                 }
@@ -71,21 +73,21 @@ var roleHarvester = {
                     if (bldrscore > upgdscore) {
                         if (bldrscore > reprscore) {
                             creep.memory.job = "bldr";
-                            creep.memory.utility = bldrscore+12;
+                            creep.memory.utility = bldrscore+10;
                         }
                         else {
                             creep.memory.job = "repr";
-                            creep.memory.utility = reprscore+12;
+                            creep.memory.utility = reprscore+10;
                         }
                     }
                     else {
                         if (upgdscore > reprscore) {
                             creep.memory.job = "upgd";
-                            creep.memory.utility = upgdscore+12;
+                            creep.memory.utility = upgdscore+10;
                         }
                         else {
                             creep.memory.job = "repr";
-                            creep.memory.utility = reprscore+12;
+                            creep.memory.utility = reprscore+10;
                         }
                     }
                 }
@@ -118,7 +120,7 @@ var roleHarvester = {
             creep.memory.job = "null"
             creep.memory.utility = -100;
         }
-        if (creep.memory.utility >= 100) {
+        if (creep.memory.utility > 100) {
             creep.memory.utility = 100;
         }
         if (nharv <= 0) {
@@ -357,7 +359,6 @@ var roleHarvester = {
             }
         }
         else if (creep.memory.job == "repr") {
-            creep.memory.utility -= 10;
             if (creep.memory.repairing && creep.carry.energy == 0) {
                 creep.memory.repairing = false;
             }
@@ -365,6 +366,7 @@ var roleHarvester = {
                 creep.memory.repairing = true;
             }
             if (creep.memory.repairing) {
+                creep.memory.utility -= 5;
                 var targets = creep.room.find(FIND_STRUCTURES, {
                     filter: object => object.hits < object.hitsMax
                 });

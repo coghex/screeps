@@ -4,6 +4,12 @@ var botCreeps = require('bot.creeps');
 var utilMem = require('util.mem');
 
 module.exports.loop = function () {
+    for (var name in Memory.creeps) {
+        if (!Game.creeps[name]) {
+            delete Memory.creeps[name];
+            console.log("removing dead creep " + name);
+        }
+    }
     var s = Game.spawns['Spawn1'];
     Memory.level = s.memory.level;
     if (s.memory.init != null) {
