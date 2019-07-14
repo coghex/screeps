@@ -14,7 +14,7 @@ var roleHarvester = {
             var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
             var buildscore = targets.length;
             var reprtargets = creep.room.find(FIND_STRUCTURES, {
-                filter: object => object.hits < (object.hitsMax-100)
+                filter: object => object.hits < (object.hitsMax-1000)
             });
             var nreprtargets = reprtargets.length
             var ncreeps = arr.length;
