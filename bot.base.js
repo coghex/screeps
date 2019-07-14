@@ -16,7 +16,7 @@ var botBase = {
             }
             else if (err==0) {
                 s.memory.ext.push({ex: x, ey: y});
-                console.log("successfully blueprinted extension at: " + (x+nx) + ", " + (y+ny));
+                //console.log("successfully blueprinted extension at: " + (x+nx) + ", " + (y+ny));
                 return;
             }
             else {
@@ -26,7 +26,7 @@ var botBase = {
         function buildRoad(r, x, y) {
             var err = r.createConstructionSite(x,y,STRUCTURE_ROAD);
             if (err=(0)) {
-                console.log("successfullty blueprinted road at: " + x + ", " + y);
+                //console.log("successfullty blueprinted road at: " + x + ", " + y);
             }
         }
         function buildRoads(n, s, r) {

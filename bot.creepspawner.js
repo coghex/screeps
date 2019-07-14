@@ -9,7 +9,7 @@ var botCreepSpawner = {
                 //Game.creeps[name].memory.job = "null";
                 //Game.creeps[name].memory.utility = 0;
             }
-            else if (s.room.energyCapacityAvailable > 400) {
+            else if (s.room.energyCapacityAvailable >= 400) {
                 s.memory.level = 2;
                 console.log("spawn '" + s.name + "' has leveled up to 2");
             }
@@ -21,7 +21,7 @@ var botCreepSpawner = {
                 //Game.creeps[name].memory.job = "null";
                 //Game.creeps[name].memory.utility = 0;
             }
-            else if (s.energy > 1000) {
+            else if (s.energy >= 1000) {
                 s.memory.level = 3;
                 console.log("spawn '" + s.name + "' has leveled up to 3");
             }
@@ -33,7 +33,7 @@ var botCreepSpawner = {
                 //Game.creeps[name].memory.job = "null";
                 //Game.creeps[name].memory.utility = 0;
             }
-            else if (s.energy > 10000) {
+            else if (s.energy >= 10000) {
                 s.memory.level = 4;
                 console.log("spawn '" + s.name + "' has leveled up to 4");
             }
