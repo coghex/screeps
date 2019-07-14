@@ -13,12 +13,16 @@ var roleHarvester = {
             //console.log("nharv: " + nharv + ". nupgd: " + nupgd + ", nbldr: " + nbldr);
             var powerscore = creep.room.energyCapacityAvailable - creep.room.energyAvailable;
             var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
+            var repairtargets = creep.room.find(FIND_STRUCTURES, {
+                filter: object => object.hits < object.hitsMax
+            });
             var buildscore = targets.length;
+            var repairscore = repairtargets.length;
             var ncreeps = arr.length;
             var bldrscore = 100-((20*nbldr)/ncreeps);
             var upgdscore = 100-((20*nupgd)/ncreeps);
             var harvscore = 100-((20*nharv)/ncreeps);
-            var reprscore = 100-((50*nharv)/ncreeps);
+            var reprscore = 100-((50*nrepr)/ncreeps);
             if ((powerscore < 40)) {
                 harvscore -= 80;
             }
@@ -26,15 +30,18 @@ var roleHarvester = {
                 harvscore += 40;
             }
             if (buildscore < 1) {
-                buildscore -= 80;
+                bldrscore -= 80;
                 upgdscore += 40;
+            }
+            if (repairscore < 1) {
+                reprscore += 40;
             }
             //console.log("harvscore: " + harvscore + ". upgdscore: " + upgdscore + ", bldrscore: " + bldrscore);
 
             var util = creep.memory.utility + 12;
             if ((util < harvscore) || (util < bldrscore) || (util < upgdscore) || (util < reprscore)) {
-                mat = [harvscore, bldrscore, upgdscore, reprscore];
-                var max = harvscore
+                const mat = [harvscore, bldrscore, upgdscore, reprscore];
+                var max = harvscore;
                 var maxi = 0;
                 for (var i = 1; i < mat.length; i++) {
                     if (mat[i] > max) {
@@ -54,9 +61,9 @@ var roleHarvester = {
                     creep.memory.job = "upgd";
                     creep.memory.utility = upgdscore+12;
                 }
-                else if (maxi == 3) {
+                else if ((maxi == 3) && (creep.room.level > 1)) {
                     creep.memory.job = "repr";
-                    creep.memory.utility = reprscore+12'
+                    creep.memory.utility = reprscore+12;
                 }
                 //if (harvscore > bldrscore) {
                 //    if (harvscore > upgdscore) {
@@ -317,7 +324,7 @@ var roleHarvester = {
             if (creep.memory.repairing) {
                 if (creep.memory.repairtarget != null) {
                     const targets = creep.room.find(FIND_STRUCTURES, {
-                        filter: object => objects.hits < objects.hitsMax
+                        filter: object => object.hits < object.hitsMax
                     });
                     targets.sort((a,b) => a.hits - b.hits);
                     creep.memory.repairtarget = targets[0].id;
@@ -326,19 +333,25 @@ var roleHarvester = {
                             creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
                         }
                     }
+                    else {
+                        creep.memory.utility = -1;
+                    }
                 }
                 else {
                     if (creep.repair(Game.getObjectById(creep.memory.repairtarget)) == ERR_NOT_IN_RANGE) {
                             creep.moveTo((Game.getObjectById(creep.memory.repairtarget)), {visualizePathStyle: {stroke: '#ffffff'}});
                     }
-                    if Game.getObjectById(creep.memory.repairtarget).hits >= Game.getObjectById(creep.memory.repairtarget).hitsMax {
-                        creep.memory.repairtarget = null;
+                    else {
+                        creep.memory.dest = -1;
+                        creep.memory.utility += Memory.level+1;
                     }
+                    if (Game.getObjectById(creep.memory.repairtarget) != null) {
+                        if (Game.getObjectById(creep.memory.repairtarget).hits >= Game.getObjectById(creep.memory.repairtarget).hitsMax) {
+                            creep.memory.repairtarget = null;
+                        }
+                    }   
                 }
-                else {
-                    creep.memory.dest = -1;
-                    creep.memory.utility += Memory.level+1;
-                }
+                
             }
             else {
                 var sources = creep.room.find(FIND_SOURCES);
@@ -379,7 +392,7 @@ var roleHarvester = {
                 else {
                     creep.memory.utility += 1;
                 }
-            
+            }
         }
     }
 };
