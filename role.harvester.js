@@ -20,7 +20,7 @@ var roleHarvester = {
             var buildscore = targets.length;
             var repairscore = repairtargets.length;
             var ncreeps = arr.length;
-            var bldrscore = 100-((10*nbldr)/Memory.level);
+            var bldrscore = 100-((20*nbldr)/Memory.level);
             var upgdscore = 100-((50*nupgd)/Memory.level);
             var harvscore = 100-((20*nharv)/Memory.level);
             var reprscore = 100-((50*nrepr)/Memory.level);
@@ -37,6 +37,9 @@ var roleHarvester = {
                 bldrscore += 40;
             }
             if (repairscore < 1) {
+                reprscore -= 20;
+            }
+            else {
                 reprscore += 20;
             }
             //console.log("harvscore: " + harvscore + ". upgdscore: " + upgdscore + ", bldrscore: " + bldrscore);
