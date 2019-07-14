@@ -9,7 +9,7 @@ var roleHarvester = {
         var nbldr = arr.filter(j => (j == "bldr")).length;
         var nrepr = arr.filter(j => (j == "repr")).length;
         if (arr.length) {
-            //console.log("nharv: " + nharv + ". nupgd: " + nupgd + ", nbldr: " + nbldr);
+            //console.log("nharv: " + nharv + ". nupgd: " + nupgd + ", nbldr: " + nbldr + ", nrepr: " + nrepr);
             var powerscore = creep.room.energyCapacityAvailable - creep.room.energyAvailable;
             var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
             var buildscore = targets.length;
@@ -26,14 +26,18 @@ var roleHarvester = {
             if ((powerscore < 40)) {
                 harvscore -= 40;
                 upgdscore += 10;
+                bldrscore += 10;
             }
             else {
                 harvscore += 60;
                 upgdscore -= 60;
             }
             if (buildscore < 1) {
-                buildscore -= 60;
+                bldrscore -= 60;
                 upgdscore += 10;
+            }
+            else {
+                bldrscore += 20;
             }
             if (nreprtargets > 1) {
                 reprscore += 10;
@@ -132,7 +136,7 @@ var roleHarvester = {
             creep.memory.job = "harv";
             creep.memory.utility = harvscore;
         }
-        creep.say(Math.round(creep.memory.utility));
+        //creep.say(Math.round(creep.memory.utility));
         if (creep.memory.job == "harv") {
 	    if (creep.carry.energy < creep.carryCapacity) {
                 var sources = creep.room.find(FIND_SOURCES);
