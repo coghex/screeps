@@ -128,7 +128,6 @@ var roleHarvester = {
             //    }
             //}
         }
-        creep.memory.utility -= Memory.level;
         if(creep.memory.job == null) {
             creep.memory.job = "null";
             creep.memory.utility = -100;
@@ -144,6 +143,7 @@ var roleHarvester = {
             creep.memory.job = "harv";
             creep.memory.utility = 100;
         }
+        creep.memory.utility -= Memory.level;
         if(creep.memory.job == "null") {
             //console.log("no more jobs, assigning arbitrarily");
             creep.memory.job = "harv";
@@ -158,7 +158,7 @@ var roleHarvester = {
                 }
             });
             creep.drop(RESOURCE_ENERGY);
-            moveTo(Game.spawns['Spawn1'].pos);
+            creep.moveTo(Game.spawns['Spawn1'].pos);
         }
         if (creep.memory.job == "harv") {
 	    if (creep.carry.energy < creep.carryCapacity) {

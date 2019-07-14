@@ -1,4 +1,6 @@
 var roleHarvester = require('role.harvester');
+var roleSentinel = require('role.sentinel');
+var roleApothecary = require('role.apothecary');
 
 var botCreeps = {
     run: function() {
@@ -7,11 +9,8 @@ var botCreeps = {
             if (creep.memory.role == 'harvester') {
                 roleHarvester.run(creep);
             }
-            if (creep.memory.role == 'upgrader') {
-                roleUpgrader.run(creep);
-            }
-            if (creep.memory.role == 'builder') {
-                roleBuilder.run(creep);
+            if (creep.memory.role == 'sentinel') {
+                roleSentinel.run(creep);
             }
         }
     }

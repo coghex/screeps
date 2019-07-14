@@ -1,6 +1,8 @@
 var botCreepSpawner = {
     run: function(s) {
         var nharv = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester').length;
+        var nsent = _.filter(Game.creeps, (creep) => creep.memory.role == 'sentinel').length;
+        var napot = _.filter(Game.creeps, (creep) => creep.memory.role == 'apothecary').length;
         var lvl = s.memory.level;
         if (lvl == 1) {
             if (nharv < 2*s.room.memory.sourceid.length) {
@@ -21,7 +23,16 @@ var botCreepSpawner = {
                 //Game.creeps[name].memory.job = "null";
                 //Game.creeps[name].memory.utility = 0;
             }
-            else if (s.energy >= 1000 || (s.room.controller.level >= 3)) {
+            const targets = s.room.find(FIND_HOSTILE_CREEPS, {
+                filter: function(object) {
+                    return object.getActiveBodyparts(ATTACK) != 0;
+                }
+            });
+            if (targets.length && (nsent < 1)) {
+                var name = 'vinsent' + Game.time;
+                s.spawnCreep([ATTACK,ATTACK,TOUGH,TOUGH,TOUGH,TOUGH,MOVE,MOVE,MOVE,MOVE], name, {memory: {role: 'sentinel' }});
+            }
+            if (s.energy >= 1000 || (s.room.controller.level >= 3)) {
                 s.memory.level = 3;
                 console.log("spawn '" + s.name + "' has leveled up to 3");
             }
