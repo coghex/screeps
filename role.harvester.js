@@ -19,10 +19,10 @@ var roleHarvester = {
             var nreprtargets = reprtargets.length
             var ncreeps = arr.length;
             var div = Memory.level;
-            var bldrscore = 100/((4*nbldr)/div);
-            var upgdscore = 100/((5*nupgd)/div);
-            var harvscore = 100/((3*nharv)/div);
-            var reprscore = 100/((6*nrepr)/div);
+            var bldrscore = 100/((2*nbldr)/div);
+            var upgdscore = 100/((3*nupgd)/div);
+            var harvscore = 100/((1*nharv)/div);
+            var reprscore = 100/((4*nrepr)/div);
             if ((powerscore < 40)) {
                 harvscore -= 90;
             }
@@ -130,7 +130,7 @@ var roleHarvester = {
             creep.memory.job = "harv";
             creep.memory.utility = harvscore;
         }
-        //creep.say(creep.memory.utility);
+        creep.say(Math.round(creep.memory.utility));
         if (creep.memory.job == "harv") {
 	    if (creep.carry.energy < creep.carryCapacity) {
                 var sources = creep.room.find(FIND_SOURCES);
