@@ -357,6 +357,7 @@ var roleHarvester = {
             }
         }
         else if (creep.memory.job == "repr") {
+            creep.memory.utility -= 10;
             if (creep.memory.repairing && creep.carry.energy == 0) {
                 creep.memory.repairing = false;
             }
@@ -380,7 +381,7 @@ var roleHarvester = {
                                 creep.moveTo(targ, {visualizePathStyle: {stroke: '#ffffff'}});
                             }
                             else {
-                                creep.memory.dest = -10;
+                                creep.memory.dest = -1;
                                 creep.memory.utility += 2;
                             }       
                         }
