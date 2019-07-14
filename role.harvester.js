@@ -54,19 +54,19 @@ var roleHarvester = {
                 }
                 if (maxi == 0) {
                     creep.memory.job = "harv";
-                    creep.memory.utility = harvscore+1;
+                    creep.memory.utility = harvscore+12;
                 }
                 else if (maxi == 1) {
                     creep.memory.job = "bldr";
-                    creep.memory.utility = bldrscore+1;
+                    creep.memory.utility = bldrscore+12;
                 }
                 else if (maxi == 2) {
                     creep.memory.job = "upgd";
-                    creep.memory.utility = upgdscore+1;
+                    creep.memory.utility = upgdscore+12;
                 }
                 else if ((maxi == 3) && (creep.room.level > 1)) {
                     creep.memory.job = "repr";
-                    creep.memory.utility = reprscore+1;
+                    creep.memory.utility = reprscore+12;
                 }
                 //if (harvscore > bldrscore) {
                 //    if (harvscore > upgdscore) {
