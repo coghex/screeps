@@ -1,8 +1,9 @@
 var botBase = {
     run: function(s) {
         function buildExt(n, r, x, y) {
-            var nx = (n % 3)-1;
-            var ny = (n / 3)-1;
+            var extlev = s.memory.level;
+            var nx = (n % (extlev*3))-extlev;
+            var ny = (n / (extlev*3))-extlev;
             var err = r.createConstructionSite(x+nx,y+ny,STRUCTURE_EXTENSION);
             if (n > 10) {
                 return;
@@ -132,8 +133,11 @@ var botBase = {
         else if (s.room.energyAvailable < (s.room.energyCapacityAvailable-100)) {
             //console.log("no need to extend yet");
         }
-        else if (nextensions < 9) {
+        else if (nextensions < 5) {
             //console.log("no extensions yet, lets see if we can...");
+            buildExt(nextensions, r, s.pos.x, s.pos.y);
+        }
+        if (r.controller.level == 3 && nextensions <= 5) {
             buildExt(nextensions, r, s.pos.x, s.pos.y);
         }
         var roads = r.find(FIND_STRUCTURES, {

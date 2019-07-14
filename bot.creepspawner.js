@@ -21,7 +21,7 @@ var botCreepSpawner = {
                 //Game.creeps[name].memory.job = "null";
                 //Game.creeps[name].memory.utility = 0;
             }
-            else if (s.energy >= 1000) {
+            else if (s.energy >= 1000 || (s.room.controller.level >= 3)) {
                 s.memory.level = 3;
                 console.log("spawn '" + s.name + "' has leveled up to 3");
             }
