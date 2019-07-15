@@ -20,7 +20,9 @@ var botCS = {
                 if (nworker < nsources) {
                     if ((s.room.energyCapacityAvailable < 400) && (s.room.energyAvailable >= 300)) {
                         var name = "workerMkI#" + Game.time;
-                        s.spawnCreep([WORK,CARRY,MOVE,MOVE,MOVE], name, { memory: { role: 'worker', utility: 0 } });
+                        s.spawnCreep([WORK,CARRY,MOVE,MOVE,MOVE], name, { memory: { role: 'worker'
+                                                                                  , job: 'null'
+                                                                                  , utility: 0 } });
                         if ((Memory.debug >= 2)) {
                             console.log("spawning creep " + name + " at " + s.name);
                         }
@@ -37,7 +39,9 @@ var botCS = {
                 if (nworker < nsources) {
                     if ((s.room.energyCapacityAvailable < 500) && (s.room.energyAvailable >= 400)) {
                         var name = "workerMkII#" + Game.time;
-                        s.spawnCreep([WORK,WORK,CARRY,MOVE,MOVE,MOVE], name, { memory: { role: "worker", utility: 0 } });
+                        s.spawnCreep([WORK,WORK,CARRY,MOVE,MOVE,MOVE], name, { memory: { role: 'worker'
+                                                                                       , job : 'null'
+                                                                                       , utility: 0 } });
                         if ((Memory.debug >= 2)) {
                             console.log("spawning creep " + name + " at " + s.name);
                         }
@@ -54,7 +58,9 @@ var botCS = {
                 if (nworker < 2*nsources) {
                     if ((s.room.energyCapacityAvailable < 600) && (s.room.energyAvailable >= 500)) {
                         var name = "workerMkIII#" + Game.time;
-                        s.spawnCreep([WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], name, { memory: { role: "worker", utility: 0 } });
+                        s.spawnCreep([WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], name, { memory: { role: 'worker'
+                                                                                        , job : 'null'
+                                                                                        , utility: 0 } });
                         if ((Memory.debug >= 2)) {
                             console.log("spawning creep " + name + " at " + s.name);
                         }

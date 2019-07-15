@@ -66,6 +66,9 @@ var roleWorker = {
             else {
                 reprscore = 5;
             }
+            if (nharv == 0) {
+                harvscore += 100;
+            }
             const maxscore = Math.max(utilscore, harvscore, upgdscore, bldrscore, reprscore);
             if (maxscore != utilscore) {
                 if (maxscore == harvscore) {
@@ -111,14 +114,37 @@ var roleWorker = {
                 creep.drop(RESOURCE_ENERGY);
                 creep.moveTo(Game.spawns['Spawn1'].pos);
                 break;
+            // harvesters find energy and bring it to structures that want it
             case "harv":
-                if (creep.carry.energy < (creep.carryCapacity/2)) {
+                if ((creep.carry.energy < (creep.carryCapacity/2)) && (creep.memory.dest != null)) {
                     utilHelp.creepGetEnergy(creep);
                 }
                 else {
-                    utilHelp.creepTrasferToStructure(creep);
+                    utilHelp.creepTransferToStructure(creep);
                 }
                 break;
+            // upgraders find energy and use it to upgrade the room's controller
+            case "upgd":
+                if (creep.memory.upgrading && creep.carry.energy == 0) {
+                    creep.memory.upgrading = false;
+                }
+                if (!creep.memory.upgrading && ((creep.memory.dest != null) && (creep.carry.energy >= (creep.carryCapacity/2)))) {
+                    creep.memory.upgrading = true;
+                }
+                if (creep.memory.upgrading) {
+                    if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(creep.room.controller);
+                    }
+                    else {
+                        creep.memory.dest = null;
+                        creep.memory.utility += 2;
+                    }
+                }
+                else {
+                    utilHelp.creepGetEnergy(creep);
+                }
+                break;
+            // dont let it get here
             default:
                 console.log("ERR: creep job " + creep.memory.job + " not defined");
         }

@@ -29,9 +29,56 @@ var utilHelp = {
     },
     // causes a creep to look for the nearest source and harvest it
     creepGetEnergy: function(creep) {
+        const sources = creep.room.find(FIND_SOURCES);
+        if (creep.memory.dest == null) {
+            var source = sources[0];
+            var minlength = 100;
+            for (var i in sources) {
+                const length = creep.pos.findPathTo(sources[i].pos).length;
+                if (length < minlength) {
+                    if (creep.room.memory.nharvs[i] < creep.room.memory.maxnharvs[i]) {
+                        const ret = utilHelp.safePos(sources[i].pos, creep.room, 2);
+                        if (ret == 0) {
+                            source = sources[i];
+                            minlength = length;
+                            creep.memory.dest = i;
+                        }
+                    }
+                }
+            }
+        }
+        else {
+            var source = sources[creep.memory.dest];
+        }
+        if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(source);
+        }
+        else {
+            creep.memory.utility += 1;
+        }
     },
     // causes a creep to look for the nearest structure and transfers all energy to it
     creepTransferToStructure: function(creep) {
+        var targets = creep.room.find(FIND_STRUCTURES, {
+            filter: (structure) => {
+                return (structure.structureType == STRUCTURE_EXTENSION ||
+                        structure.structureType == STRUCTURE_SPAWN ||
+                        structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
+            }
+        });
+        if (targets.length > 0) {
+            if (creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(targets[0]);
+            }
+            else {
+                creep.memory.dest = null;
+                creep.memory.utility += 20;
+            }
+        }
+        else {
+            creep.memory.job = "null";
+            creep.memory.utility = -100;
+        }
     }
 }
 
