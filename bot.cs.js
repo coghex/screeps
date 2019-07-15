@@ -1,5 +1,6 @@
 var utilHelp = require('util.help');
 
+// creep spawning manager
 var botCS = {
     run: function(s) {
         const nworker = _.filter(Game.creeps, (creep) => creep.memory.role == 'worker').length;

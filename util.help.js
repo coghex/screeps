@@ -1,3 +1,4 @@
+//random helper functions
 var utilHelp = {
     // collects creep name garbage
     freeCreepMemory: function() {

@@ -1,6 +1,7 @@
 var botBase = require('bot.base');
 var botCS = require('bot.cs');
 
+//spawns attempt to maximize their own utility with no knowledge of others
 var botSpawn = {
     init: function(s) {
         s.memory.level = 1;

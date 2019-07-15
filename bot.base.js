@@ -1,3 +1,4 @@
+//builds roads needed for spawn activity
 var botBase = {
     init: function(s) {
     },
