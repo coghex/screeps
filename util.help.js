@@ -26,6 +26,12 @@ var utilHelp = {
             });
         }
         return ret;
+    },
+    // causes a creep to look for the nearest source and harvest it
+    creepGetEnergy: function(creep) {
+    },
+    // causes a creep to look for the nearest structure and transfers all energy to it
+    creepTransferToStructure: function(creep) {
     }
 }
 
