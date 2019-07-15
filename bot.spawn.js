@@ -5,7 +5,6 @@ var botSpawn = {
     init: function(s) {
         s.memory.level = 1;
         botBase.init(s);
-        botCS.init(s);
     },
     run: function(s) {
         botBase.run(s);
