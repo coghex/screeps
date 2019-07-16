@@ -36,12 +36,12 @@ var roleWorker = {
             const repairneed = repairtargets.length;
             
             const utilscore = creep.memory.utility + 10;
-            var harvscore = 100/nharv;
+            var harvscore = 100/(1+nharv/2);
             //var ldhvscore = 100/nldhv;
-            var upgdscore = 100/nupgd;
-            var bldrscore = 100/nbldr;
+            var upgdscore = 100/(1+nupgd/2);
+            var bldrscore = 100/(1+nbldr/2);
             //var ldbdscore = 100/nldbd;
-            var reprscore = 100/nrepr;
+            var reprscore = 100/(1+nrepr/2);
             //var gbgcscore = 100/ngbgd;
             //var ldgcscore = 100/nldgc;
             if (powerneed < 40) {
@@ -116,7 +116,13 @@ var roleWorker = {
                 break;
             // harvesters find energy and bring it to structures that want it
             case "harv":
-                if ((creep.carry.energy < (creep.carryCapacity/2)) && (creep.memory.dest != null)) {
+                if (creep.memory.harvesting && creep.carry.energy == 0) {
+                    creep.memory.harvesting = false;
+                }
+                if (!creep.memory.harvesting && (creep.carry.energy >= (creep.carryCapacity))) {
+                    creep.memory.harvesting = true;
+                }
+                if (!creep.memory.harvesting) {
                     utilHelp.creepGetEnergy(creep);
                 }
                 else {
@@ -128,7 +134,7 @@ var roleWorker = {
                 if (creep.memory.upgrading && creep.carry.energy == 0) {
                     creep.memory.upgrading = false;
                 }
-                if (!creep.memory.upgrading && ((creep.memory.dest != null) && (creep.carry.energy >= (creep.carryCapacity/2)))) {
+                if (!creep.memory.upgrading && (creep.carry.energy >= (creep.carryCapacity))) {
                     creep.memory.upgrading = true;
                 }
                 if (creep.memory.upgrading) {
@@ -143,6 +149,23 @@ var roleWorker = {
                 else {
                     utilHelp.creepGetEnergy(creep);
                 }
+                break;
+            case "bldr":
+                if (creep.memory.building && creep.carry.energy == 0) {
+                    creep.memory.building = false;
+                }
+                if (!creep.memory.building && ((creep.carry.energy >= (creep.carryCapacity)))) {
+                    creep.memory.building = true;
+                }
+                if (creep.memory.building) {
+                    utilHelp.creepBuild(creep);
+                }
+                else {
+                    utilHelp.creepGetEnergy(creep)
+                }
+                
+                break;
+            case "repr":
                 break;
             // dont let it get here
             default:

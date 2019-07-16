@@ -66,13 +66,50 @@ var utilHelp = {
                         structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
             }
         });
-        if (targets.length > 0) {
+        if (targets.length) {
             if (creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(targets[0]);
             }
             else {
-                creep.memory.dest = null;
                 creep.memory.utility += 20;
+            }
+        }
+        else {
+            creep.memory.job = "null";
+            creep.memory.utility = -100;
+        }
+    },
+    creepBuild: function(creep) {
+        var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
+        if (targets.length) {
+            if (creep.memory.builddest != null) {
+                var target = Game.getObjectById(creep.memory.builddest);
+                if (target != null) {
+                    if (creep.build(target) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(target);
+                    }
+                    else {
+                        creep.memory.builddest = null;
+                    }
+                }
+            }
+            else {
+                var mindist = 100;
+                var shortest = 0;
+                for (var i in targets) {
+                    var path = creep.room.findPath(targets[i].pos, creep.pos);
+                    if (path.length < mindist) {
+                        mindist = path.length;
+                        shortest = i;
+                    }
+                }
+                creep.memory.builddest = targets[shortest],id;
+                if (creep.build(targets[shortest]) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(targets[shortest]);
+                }
+                else {
+                    creep.memory.utility += 2;
+                }
             }
         }
         else {
