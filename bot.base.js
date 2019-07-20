@@ -53,6 +53,7 @@ var botBase = {
                         console.log("building roads to the spawns...");
                     }
                     utilHelp.buildExtRoads(r);
+                    utilHelp.buildRoadSpawnToController(s, r);
                     utilHelp.buildRoadSpawnToSource(s, r);
                     s.memory.spawncon = 1;
                 }
@@ -61,6 +62,8 @@ var botBase = {
                         console.log("building roads to the controller...");
                     }
                     utilHelp.buildExtRoads(r);
+                    utilHelp.buildRoadSpawnToController(s, r);
+                    utilHelp.buildRoadSpawnToSource(s, r);
                     utilHelp.buildRoadSourceToController(s, r);
                     s.memory.sourcecon = 1;
                 }

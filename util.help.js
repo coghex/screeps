@@ -209,7 +209,7 @@ var utilHelp = {
     buildRoadSpawnToController: function(s, r) {
         const sloc = s.pos;
         const cloc = r.controller.pos;
-        const path = r.findPath(sloc, cloc, {ignoreCreeps: true, ignoreDestructableStructures: true, ignoreRoads: true});
+        const path = r.findPath(sloc, cloc, {ignoreCreeps: true});
         for (var i in (path)) {
             var ret = 0;
             var pos = new RoomPosition(path[i].x, path[i].y, r.name);
@@ -232,7 +232,7 @@ var utilHelp = {
         for (var i in cloc) {
             const notsafe = utilHelp.safePos(cloc[i].pos, r, 2);
             if (!notsafe) {
-                var path = r.findPath(sloc, cloc[i].pos, {ignoreCreeps: true, ignoreDestructableStructures: true, ignoreRoads: true});
+                var path = r.findPath(sloc, cloc[i].pos, {ignoreCreeps: true});
                 for (var j in (path)) {
                     var ret = 0;
                     var pos = new RoomPosition(path[j].x, path[j].y, r.name);
@@ -257,7 +257,7 @@ var utilHelp = {
         for (var i in cloc) {
             const notsafe = utilHelp.safePos(cloc[i].pos, r, 2);
             if (!notsafe) {
-                var path = r.findPath(sloc, cloc[i],pos, {ignoreCreeps: true, ignoreDestructableStructures: true, ignoreRoads: true});
+                var path = r.findPath(sloc, cloc[i],pos, {ignoreCreeps: true});
                 for (var j in (path)) {
                     var ret = 0;
                     var pos = new RoomPosition(path[j].x, path[j].y, r.name);

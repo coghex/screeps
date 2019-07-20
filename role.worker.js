@@ -27,86 +27,92 @@ var roleWorker = {
         //unless its null, then it automatically picks one.
         const rand = Math.floor(Math.random()*10);
         if ((creep.memory.job == "null") || ((Game.time % 10) == rand)) {
-            const powerneed = creep.room.energyCapacityAvailable - creep.room.energyAvailable;
-            const buildtargets = creep.room.find(FIND_CONSTRUCTION_SITES);
-            const buildneed = buildtargets.length;
-            const repairtargets = creep.room.find(FIND_STRUCTURES, {
-                filter: object => object.hits < (object.hitsMax-1000)
-            });
-            const repairneed = repairtargets.length;
-            const spawns = creep.room.find(FIND_STRUCTURES, {
-                filter: (struct) => (struct.structureType == STRUCTURE_SPAWN)
-            });
-            // dont count yourself when finding work
-            var meharv = 0;
-            var meupgd = 0;
-            var mebldr = 0;
-            var merepr = 0;
-            if (creep.memory.job == "harv") {
-                meharv = 1;
-            }
-            if (creep.memory.job == "upgd") {
-                meupgd = 1;
-            }
-            if (creep.memory.job == "bldr") {
-                mebldr = 1;
-            }
-            if (creep.memory.job == "repr") {
-                merepr = 1;
-            }
-            const utilscore = creep.memory.utility + 12;
-            var harvscore = 100/(1+(nharv-meharv)/(2*spawns[0].memory.level));
-            //var ldhvscore = 100/nldhv;
-            var upgdscore = 100/(1+(nupgd-meupgd)/(2*spawns[0].memory.level));
-            var bldrscore = 100/(1+(nbldr-mebldr)/(2*spawns[0].memory.level));
-            //var ldbdscore = 100/nldbd;
-            var reprscore = 100/(1+(nrepr-merepr)/(2*spawns[0].memory.level));
-            //var gbgcscore = 100/ngbgd;
-            //var ldgcscore = 100/nldgc;
-            if (!powerneed) {
-                harvscore = 2;
-                upgdscore += 20;
-                bldrscore += 20;
+            if ((creep.hits < creep.hitsMax) && (creep.memory.job != "flee")) {
+                creep.memory.job = "flee";
+                creep.memory.utility = 100;
             }
             else {
-                harvscore += 80;
-                upgdscore -= 20;
-                bldrscore -= 20;
-            }
-            if (buildneed > 0) {
-                bldrscore += 40;
-            }
-            else {
-                upgdscore += 40;
-                bldrscore = 2;
-            }
-            if (repairneed > 0) {
-                reprscore += 40;
-            }
-            else {
-                upgdscore += 20;
-                reprscore = 2;
-            }
-            const maxscore = Math.max(utilscore, harvscore, upgdscore, bldrscore, reprscore);
-            if (maxscore != utilscore) {
-                if (maxscore == harvscore) {
-                    creep.memory.job = "harv";
-                    creep.memory.utility = harvscore+60;
+                const powerneed = creep.room.energyCapacityAvailable - creep.room.energyAvailable;
+                const buildtargets = creep.room.find(FIND_CONSTRUCTION_SITES);
+                const buildneed = buildtargets.length;
+                const repairtargets = creep.room.find(FIND_STRUCTURES, {
+                    filter: object => object.hits < (object.hitsMax-1000)
+                });
+                const repairneed = repairtargets.length;
+                const spawns = creep.room.find(FIND_STRUCTURES, {
+                    filter: (struct) => (struct.structureType == STRUCTURE_SPAWN)
+                });
+                // dont count yourself when finding work
+                var meharv = 0;
+                var meupgd = 0;
+                var mebldr = 0;
+                var merepr = 0;
+                if (creep.memory.job == "harv") {
+                    meharv = 1;
                 }
-                else if (maxscore == upgdscore) {
-                    creep.memory.job = "upgd";
-                    creep.memory.utility = upgdscore+60;
+                if (creep.memory.job == "upgd") {
+                    meupgd = 1;
                 }
-                else if (maxscore == bldrscore) {
-                    creep.memory.job = "bldr";
-                    creep.memory.utility = bldrscore+60;
+                if (creep.memory.job == "bldr") {
+                    mebldr = 1;
                 }
-                else if (maxscore == reprscore) {
-                    creep.memory.job = "repr";
-                    creep.memory.utility = reprscore+60;
+                if (creep.memory.job == "repr") {
+                    merepr = 1;
+                }
+                const utilscore = creep.memory.utility + 12;
+                var harvscore = 100/(1+(nharv-meharv)/(2*spawns[0].memory.level));
+                //var ldhvscore = 100/nldhv;
+                var upgdscore = 100/(1+(nupgd-meupgd)/(2*spawns[0].memory.level));
+                var bldrscore = 100/(1+(nbldr-mebldr)/(2*spawns[0].memory.level));
+                //var ldbdscore = 100/nldbd;
+                var reprscore = 100/(1+(nrepr-merepr)/(2*spawns[0].memory.level));
+                //var gbgcscore = 100/ngbgd;
+                //var ldgcscore = 100/nldgc;
+                if (!powerneed) {
+                    harvscore = 2;
+                    upgdscore += 20;
+                    bldrscore += 20;
                 }
                 else {
-                    console.log("ERR: could not find best score");
+                    harvscore += 80;
+                    upgdscore -= 20;
+                    bldrscore -= 20;
+                }
+                if (buildneed > 0) {
+                    bldrscore += 40;
+                }
+                else {
+                    upgdscore += 40;
+                    bldrscore = 2;
+                }
+                if (repairneed > 0) {
+                    reprscore += 40;
+                }
+                else {
+                    upgdscore += 20;
+                    reprscore = 2;
+                }
+                const maxscore = Math.max(utilscore, harvscore, upgdscore, bldrscore, reprscore);
+                if (maxscore != utilscore) {
+                    if (maxscore == harvscore) {
+                        creep.memory.job = "harv";
+                        creep.memory.utility = harvscore+60;
+                    }
+                    else if (maxscore == upgdscore) {
+                        creep.memory.job = "upgd";
+                        creep.memory.utility = upgdscore+60;
+                    }
+                    else if (maxscore == bldrscore) {
+                        creep.memory.job = "bldr";
+                        creep.memory.utility = bldrscore+60;
+                    }
+                    else if (maxscore == reprscore) {
+                        creep.memory.job = "repr";
+                        creep.memory.utility = reprscore+60;
+                    }
+                    else {
+                        console.log("ERR: could not find best score");
+                    }
                 }
             }
         }
