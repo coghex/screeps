@@ -34,37 +34,57 @@ var roleWorker = {
                 filter: object => object.hits < (object.hitsMax-1000)
             });
             const repairneed = repairtargets.length;
-            
-            const utilscore = creep.memory.utility + 10;
-            var harvscore = 100/(1+nharv/2);
+            const spawns = creep.room.find(FIND_STRUCTURES, {
+                filter: (struct) => (struct.structureType == STRUCTURE_SPAWN)
+            });
+            // dont count yourself when finding work
+            var meharv = 0;
+            var meupgd = 0;
+            var mebldr = 0;
+            var merepr = 0;
+            if (creep.memory.job == "harv") {
+                meharv = 1;
+            }
+            if (creep.memory.job == "upgd") {
+                meupgd = 1;
+            }
+            if (creep.memory.job == "bldr") {
+                mebldr = 1;
+            }
+            if (creep.memory.job == "repr") {
+                merepr = 1;
+            }
+            const utilscore = creep.memory.utility + 12;
+            var harvscore = 100/(1+nharv/(2*spawns[0].memory.level)-meharv);
             //var ldhvscore = 100/nldhv;
-            var upgdscore = 100/(1+nupgd/2);
-            var bldrscore = 100/(1+nbldr/2);
+            var upgdscore = 100/(1+nupgd/(2*spawns[0].memory.level)-meupgd);
+            var bldrscore = 100/(1+nbldr/(2*spawns[0].memory.level)-mebldr);
             //var ldbdscore = 100/nldbd;
-            var reprscore = 100/(1+nrepr/2);
+            var reprscore = 100/(1+nrepr/(2*spawns[0].memory.level)-merepr);
             //var gbgcscore = 100/ngbgd;
             //var ldgcscore = 100/nldgc;
-            if (powerneed < 40) {
-                harvscore = 5;
-                upgdscore += 10;
-                bldrscore += 10;
+            if (!powerneed) {
+                harvscore = 2;
+                upgdscore += 40;
+                bldrscore += 20;
             }
             else {
-                harvscore += 60;
-                upgdscore -=10;
+                harvscore += 80;
+                upgdscore -= 10;
                 bldrscore -= 10;
             }
             if (buildneed > 0) {
-                bldrscore += 60;
+                bldrscore += 80;
             }
             else {
-                bldrscore = 5;
+                upgdscore += 30;
+                bldrscore = 2;
             }
             if (repairneed > 0) {
-                reprscore += 60;
+                reprscore += 80;
             }
             else {
-                reprscore = 5;
+                reprscore = 2;
             }
             if (nharv == 0) {
                 harvscore += 100;
@@ -73,30 +93,30 @@ var roleWorker = {
             if (maxscore != utilscore) {
                 if (maxscore == harvscore) {
                     creep.memory.job = "harv";
-                    creep.memory.utility = harvscore+10;
+                    creep.memory.utility = harvscore+60;
                 }
                 else if (maxscore == upgdscore) {
                     creep.memory.job = "upgd";
-                    creep.memory.utility = upgdscore+10;
+                    creep.memory.utility = upgdscore+60;
                 }
                 else if (maxscore == bldrscore) {
                     creep.memory.job = "bldr";
-                    creep.memory.utility = bldrscore+10;
+                    creep.memory.utility = bldrscore+60;
                 }
                 else if (maxscore == reprscore) {
                     creep.memory.job = "repr";
-                    creep.memory.utility = reprscore+10;
+                    creep.memory.utility = reprscore+60;
                 }
                 else {
                     console.log("ERR: could not find best score");
                 }
             }
         }
-        if (creep.memory.utility < 0) {
+        else if (creep.memory.utility < 0) {
             creep.memory.job = "null";
             creep.memory.utility = -100;
         }
-        if (creep.memory.utility > 100) {
+        else if (creep.memory.utility > 100) {
             creep.memory.utility = 100;
         }
 

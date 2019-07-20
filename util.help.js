@@ -1,12 +1,14 @@
 //random helper functions
 var utilHelp = {
-    // collects creep name garbage
+    // collects creep name garbage every 24 ticks
     freeCreepMemory: function() {
-        for (var name in Memory.creeps) {
-            if (!Game.creeps[name]) {
-                delete Memory.creeps[name];
-                if (Memory.debug >= 2) {
-                    console.log("removing dead creep " + name);
+        if (!(Game.time % 24)) {
+            for (var name in Memory.creeps) {
+                if (!Game.creeps[name]) {
+                    delete Memory.creeps[name];
+                    if (Memory.debug > 2) {
+                        console.log("removing dead creep " + name);
+                    }
                 }
             }
         }
@@ -89,8 +91,11 @@ var utilHelp = {
                         creep.moveTo(target);
                     }
                     else {
-                        creep.memory.builddest = null;
+                        creep.memory.utility += 2;
                     }
+                }
+                else {
+                    creep.memory.builddest = null;
                 }
             }
             else {
@@ -98,12 +103,19 @@ var utilHelp = {
                 var shortest = 0;
                 for (var i in targets) {
                     var path = creep.room.findPath(targets[i].pos, creep.pos);
-                    if (path.length < mindist) {
+                    if (targets[i].structureType == STRUCTURE_EXTENSION) {
                         mindist = path.length;
-                        shortest = i;
+                        shortest = i
+                        break;
+                    }
+                    else {
+                        if (path.length < mindist) {
+                            mindist = path.length;
+                            shortest = i;
+                        }
                     }
                 }
-                creep.memory.builddest = targets[shortest],id;
+                creep.memory.builddest = targets[shortest].id;
                 if (creep.build(targets[shortest]) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(targets[shortest]);
                 }
@@ -116,6 +128,131 @@ var utilHelp = {
             creep.memory.job = "null";
             creep.memory.utility = -100;
         }
+    },
+    // creates the construction site for the extensions
+    buildExt: function(n, r, s, lvl) {
+        const nx = (n % (2*lvl-1)) - (lvl-1);
+        const ny = Math.floor((n / (2*lvl-1))) - (lvl-1);
+        const x = s.pos.x+nx;
+        const y = s.pos.y+ny;
+        const err = r.createConstructionSite(x, y, STRUCTURE_EXTENSION);
+        if (n > 50) {
+            return;
+        }
+        if ((err==(-8)) || (err == (-14))) {
+            console.log("not ready for extensions yet");
+        }
+        else if ((err == (-7)) || (err==(-10))) {
+            if (Memory.debug > 3) {
+                console.log("cant build at " + x + ", " + y + "... trying next location");
+            }
+            utilHelp.buildExt((n+1),r,s);
+        }
+        else if (err==0) {
+            if (Memory.debug > 3) {
+                console.log("extension built at " + x + ", " + y);
+            }
+            s.memory.ext.push({ex: x, ey: y});
+        }
+        else {
+            console.log("ERR: undefined api error");
+        }
+    },
+    // builds roads around the spawn and extensions
+    buildExtRoads: function(r) {
+        const exts = r.find(FIND_STRUCTURES, {
+            filter: (struct) => (struct == STRUCTURE_EXTENSION || struct == STRUCTURE_SPAWN)
+        });
+        for (var i in exts) {
+            utilHelp.buildRoad(r, exts[i].pos.x, exts[i].pos.y);
+        }
+    },
+    // builds a road at x, y in a room
+    buildRoad: function(r, x, y) {
+        const err = r.createConstructionSite(x,y,STRUCTURE_ROAD);
+        if (err == 0) {
+            //console.log("successfully blueprinted road at: " + x + ", " + y);
+        }
+        else {
+            //console.log("cant build road at: " + x + ", " + y);
+        }
+    },
+    // builds a road from the spawn to the controller
+    buildRoadSpawnToController: function(s, r) {
+        const sloc = s.pos;
+        const cloc = r.controller.pos;
+        const path = r.findPath(sloc, cloc, {ignoreCreeps: true, ignoreDestructableStructures: true, ignoreRoads: true});
+        for (var i in path) {
+            var ret = 0;
+            var pos = new RoomPosition(path[i].x, path[i].y, r.name);
+            r.lookAt(pos).forEach(function(obj) {
+                if ((obj.type == LOOK_STRUCTURES)) {
+                    ret += 1;
+                }
+            });
+            if (ret == 0) {
+                r.createConstructionSite(path[i].x, path[i].y, STRUCTURE_ROAD);
+            }
+        }
+    },
+    // roads from the spawn to each source
+    buildRoadSpawnToSource: function(s, r) {
+        const sloc = s.pos;
+        const cloc = r.find(FIND_SOURCES);
+        for (var i in cloc) {
+            const notsafe = utilHelp.safePos(cloc[i], r, 4);
+            if (!notsafe) {
+                var path = r.findPath(sloc, cloc[i], {ignoreCreeps: true, ignoreDestructableStructures: true, ignoreRoads: true});
+                for (var j in path) {
+                    var ret = 0;
+                    var pos = new RoomPosition(path[j].x, path[j].y, r.name);
+                    r.lookAt(pos).forEach(function(obj) {
+                        if ((obj.type == LOOK_STRUCTURES)) {
+                            ret += 1;
+                        }
+                    });
+                    if (ret == 0) {
+                        r.createConstructionSite(path[j].x, path[j].y, STRUCTURE_ROAD);
+                    }
+                }
+            }
+        }
+    },
+    // roads from the controller to each source
+    buildRoadSourceToController: function(s, r) {
+        const sloc = r.controller.pos;
+        const cloc = r.find(FIND_SOURCES);
+        for (var i in cloc) {
+            const notsafe = utilHelp.safePos(cloc[i], r, 4);
+            if (!notsafe) {
+                var path = r.findPath(sloc, cloc[i], {ignoreCreeps: true, ignoreDestructableStructures: true, ignoreRoads: true});
+                for (var j in path) {
+                    var ret = 0;
+                    var pos = new RoomPosition(path[j].x, path[j].y, r.name);
+                    r.lookAt(pos).forEach(function(obj) {
+                        if (!obj.type == LOOK_STRUCTURES) {
+                            ret += 1;
+                        }
+                    });
+                    if (ret == 0) {
+                        r.createConstructionSite(path[j].x, path[j].y, STRUCTURE_ROAD);
+                    }
+                }
+            }
+        }
+    },
+    // sets the number of harvesters around a source
+    setNHarv: function(r, sources, i) {
+        var ret = 0;
+        if (i) {
+            for (var name in Game.creeps) {
+                const creep = Game.creeps[name];
+                if (creep.memory.dest == i) {
+                    ret += 1;
+                }
+            }
+        }
+        r.memory.nharvs[i] = ret;
     }
 }
 

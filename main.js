@@ -1,7 +1,7 @@
 var utilHelp = require('util.help');
 var botEmpire = require('bot.empire');
 const s = Game.spawns['Spawn1'];
-const debuglevel = 5;
+const debuglevel = 2;
 
 module.exports.loop = function () {
     if (Memory.init != null) {

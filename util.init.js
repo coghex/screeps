@@ -37,6 +37,11 @@ var utilInit = {
             spawn.room.memory.maxnharvs[i] = n;
             spawn.room.memory.nharvs[i] = 0;
         }
+        spawn.memory.ext = [];
+        spawn.memory.extcon = 0;
+        spawn.memory.contcon = 0;
+        spawn.memory.spawncon = 0;
+        spawn.memory.sourcecon = 0;
     }
 }
 
