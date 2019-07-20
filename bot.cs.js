@@ -50,7 +50,7 @@ var botCS = {
                         else if (s.room.energyCapacityAvailable >= 500) {
                             s.memory.level = 3;
                             if ((Memory.debug > 1)) {
-                                console.log("spawn " + s.name + "has leveled up to 3...");
+                                console.log("spawn " + s.name + " has leveled up to 3...");
                             }
                         }
                     }

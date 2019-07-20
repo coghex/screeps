@@ -61,25 +61,53 @@ var utilHelp = {
     },
     // causes a creep to look for the nearest structure and transfers all energy to it
     creepTransferToStructure: function(creep) {
-        var targets = creep.room.find(FIND_STRUCTURES, {
+        var towers = creep.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
-                return (structure.structureType == STRUCTURE_EXTENSION ||
-                        structure.structureType == STRUCTURE_SPAWN ||
-                        structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
+                return (structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
             }
         });
-        if (targets.length) {
-            if (creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(targets[0]);
+        if (towers.length) {
+            if (creep.transfer(towers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(towers[0]);
+            }
+            else {
+                creep.memory.utility += 40;
+                return;
+            }
+        }
+        var exts = creep.room.find(FIND_STRUCTURES, {
+            filter: (structure) => {
+                return (structure.structureType == STRUCTURE_EXTENSION) && structure.energy < structure.energyCapacity;
+            }
+        });       
+        if (exts.length) {
+            if (creep.transfer(exts[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(exts[0]);
             }
             else {
                 creep.memory.utility += 20;
+                return;
+            }
+        }
+        var spwns = creep.room.find(FIND_STRUCTURES, {
+            filter: (structure) => {
+                return (structure.structureType == STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity;
+            }
+        });
+        if (spwns.length) {
+            if (creep.transfer(spwns[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(spwns[0]);
+            }
+            else {
+                creep.memory.utility += 10;
+                return;
             }
         }
         else {
             creep.memory.job = "null";
             creep.memory.utility = -100;
-        }
+            return;
+        }       
     },
     creepBuild: function(creep) {
         var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
