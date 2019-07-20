@@ -182,17 +182,18 @@ var utilHelp = {
         const sloc = s.pos;
         const cloc = r.controller.pos;
         const path = r.findPath(sloc, cloc, {ignoreCreeps: true, ignoreDestructableStructures: true, ignoreRoads: true});
-        path.pop();
-        for (var i in (path.slice(1))) {
+        for (var i in (path)) {
             var ret = 0;
             var pos = new RoomPosition(path[i].x, path[i].y, r.name);
-            r.lookAt(pos).forEach(function(obj) {
-                if ((obj.type == LOOK_STRUCTURES)) {
-                    ret += 1;
+            if (pos != null) {
+                r.lookAt(pos).forEach(function(obj) {
+                    if ((obj.type == LOOK_STRUCTURES)) {
+                        ret += 1;
+                    }
+                });
+                if (ret == 0) {
+                    r.createConstructionSite(path[i].x, path[i].y, STRUCTURE_ROAD);
                 }
-            });
-            if (ret == 0) {
-                r.createConstructionSite(path[i].x, path[i].y, STRUCTURE_ROAD);
             }
         }
     },
@@ -201,20 +202,21 @@ var utilHelp = {
         const sloc = s.pos;
         const cloc = r.find(FIND_SOURCES);
         for (var i in cloc) {
-            const notsafe = utilHelp.safePos(cloc[i].pos, r, 4);
+            const notsafe = utilHelp.safePos(cloc[i].pos, r, 2);
             if (!notsafe) {
                 var path = r.findPath(sloc, cloc[i].pos, {ignoreCreeps: true, ignoreDestructableStructures: true, ignoreRoads: true});
-                path.pop();
-                for (var j in (path.slice(1))) {
+                for (var j in (path)) {
                     var ret = 0;
                     var pos = new RoomPosition(path[j].x, path[j].y, r.name);
-                    r.lookAt(pos).forEach(function(obj) {
-                        if ((obj.type == LOOK_STRUCTURES)) {
-                            ret += 1;
+                    if (pos != null) {
+                        r.lookAt(pos).forEach(function(obj) {
+                            if ((obj.type == LOOK_STRUCTURES)) {
+                                ret += 1;
+                            }
+                        });
+                        if (ret == 0) {
+                            r.createConstructionSite(path[j].x, path[j].y, STRUCTURE_ROAD);
                         }
-                    });
-                    if (ret == 0) {
-                        r.createConstructionSite(path[j].x, path[j].y, STRUCTURE_ROAD);
                     }
                 }
             }
@@ -225,20 +227,21 @@ var utilHelp = {
         const sloc = r.controller.pos;
         const cloc = r.find(FIND_SOURCES);
         for (var i in cloc) {
-            const notsafe = utilHelp.safePos(cloc[i].pos, r, 4);
+            const notsafe = utilHelp.safePos(cloc[i].pos, r, 2);
             if (!notsafe) {
                 var path = r.findPath(sloc, cloc[i],pos, {ignoreCreeps: true, ignoreDestructableStructures: true, ignoreRoads: true});
-                path.pop();
-                for (var j in (path.slice(1))) {
+                for (var j in (path)) {
                     var ret = 0;
                     var pos = new RoomPosition(path[j].x, path[j].y, r.name);
-                    r.lookAt(pos).forEach(function(obj) {
-                        if (!obj.type == LOOK_STRUCTURES) {
-                            ret += 1;
+                    if (pos != null) {
+                        r.lookAt(pos).forEach(function(obj) {
+                            if (!obj.type == LOOK_STRUCTURES) {
+                                ret += 1;
+                            }
+                        });
+                        if (ret == 0) {
+                            r.createConstructionSite(path[j].x, path[j].y, STRUCTURE_ROAD);
                         }
-                    });
-                    if (ret == 0) {
-                        r.createConstructionSite(path[j].x, path[j].y, STRUCTURE_ROAD);
                     }
                 }
             }

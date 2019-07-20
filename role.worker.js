@@ -87,9 +87,6 @@ var roleWorker = {
                 upgdscore += 20;
                 reprscore = 2;
             }
-            if (nharv == 0) {
-                harvscore += 100;
-            }
             const maxscore = Math.max(utilscore, harvscore, upgdscore, bldrscore, reprscore);
             if (maxscore != utilscore) {
                 if (maxscore == harvscore) {

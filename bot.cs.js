@@ -29,7 +29,7 @@ var botCS = {
                     }
                     else if (s.room.energyCapacityAvailable >= 400) {
                         s.memory.level = 2;
-                        if ((Memory.debug > 2)) {
+                        if ((Memory.debug > 1)) {
                             console.log("spawn " + s.name + " has leveled up to 2...");
                         }
                     }
@@ -48,7 +48,7 @@ var botCS = {
                     }
                     else if (s.room.energyCapacityAvailable >= 500) {
                         s.memory.level = 3;
-                        if ((Memory.debug > 2)) {
+                        if ((Memory.debug > 1)) {
                             console.log("spawn " + s.name + "has leveled up to 3...");
                         }
                     }
@@ -67,7 +67,7 @@ var botCS = {
                     }
                     else if (s.room.energyCapacityAvailable >= 600) {
                         s.memory.level = 4;
-                        if ((Memory.debug > 2)) {
+                        if ((Memory.debug > 1)) {
                             console.log("spawn " + s,name + "has leveled up to 4...");
                         }
                     }
