@@ -161,7 +161,7 @@ var utilHelp = {
     // builds roads around the spawn and extensions
     buildExtRoads: function(r) {
         const exts = r.find(FIND_STRUCTURES, {
-            filter: (struct) => (struct == STRUCTURE_EXTENSION || struct == STRUCTURE_SPAWN)
+            filter: (struct) => (struct == STRUCTURE_EXTENSION)
         });
         for (var i in exts) {
             utilHelp.buildRoad(r, exts[i].pos.x, exts[i].pos.y);
@@ -182,7 +182,8 @@ var utilHelp = {
         const sloc = s.pos;
         const cloc = r.controller.pos;
         const path = r.findPath(sloc, cloc, {ignoreCreeps: true, ignoreDestructableStructures: true, ignoreRoads: true});
-        for (var i in path) {
+        path.pop();
+        for (var i in (path.slice(1))) {
             var ret = 0;
             var pos = new RoomPosition(path[i].x, path[i].y, r.name);
             r.lookAt(pos).forEach(function(obj) {
@@ -200,10 +201,11 @@ var utilHelp = {
         const sloc = s.pos;
         const cloc = r.find(FIND_SOURCES);
         for (var i in cloc) {
-            const notsafe = utilHelp.safePos(cloc[i], r, 4);
+            const notsafe = utilHelp.safePos(cloc[i].pos, r, 4);
             if (!notsafe) {
-                var path = r.findPath(sloc, cloc[i], {ignoreCreeps: true, ignoreDestructableStructures: true, ignoreRoads: true});
-                for (var j in path) {
+                var path = r.findPath(sloc, cloc[i].pos, {ignoreCreeps: true, ignoreDestructableStructures: true, ignoreRoads: true});
+                path.pop();
+                for (var j in (path.slice(1))) {
                     var ret = 0;
                     var pos = new RoomPosition(path[j].x, path[j].y, r.name);
                     r.lookAt(pos).forEach(function(obj) {
@@ -223,10 +225,11 @@ var utilHelp = {
         const sloc = r.controller.pos;
         const cloc = r.find(FIND_SOURCES);
         for (var i in cloc) {
-            const notsafe = utilHelp.safePos(cloc[i], r, 4);
+            const notsafe = utilHelp.safePos(cloc[i].pos, r, 4);
             if (!notsafe) {
-                var path = r.findPath(sloc, cloc[i], {ignoreCreeps: true, ignoreDestructableStructures: true, ignoreRoads: true});
-                for (var j in path) {
+                var path = r.findPath(sloc, cloc[i],pos, {ignoreCreeps: true, ignoreDestructableStructures: true, ignoreRoads: true});
+                path.pop();
+                for (var j in (path.slice(1))) {
                     var ret = 0;
                     var pos = new RoomPosition(path[j].x, path[j].y, r.name);
                     r.lookAt(pos).forEach(function(obj) {

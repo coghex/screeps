@@ -55,35 +55,36 @@ var roleWorker = {
                 merepr = 1;
             }
             const utilscore = creep.memory.utility + 12;
-            var harvscore = 100/(1+nharv/(2*spawns[0].memory.level)-meharv);
+            var harvscore = 100/(1+(nharv-meharv)/(2*spawns[0].memory.level));
             //var ldhvscore = 100/nldhv;
-            var upgdscore = 100/(1+nupgd/(2*spawns[0].memory.level)-meupgd);
-            var bldrscore = 100/(1+nbldr/(2*spawns[0].memory.level)-mebldr);
+            var upgdscore = 100/(1+(nupgd-meupgd)/(2*spawns[0].memory.level));
+            var bldrscore = 100/(1+(nbldr-mebldr)/(2*spawns[0].memory.level));
             //var ldbdscore = 100/nldbd;
-            var reprscore = 100/(1+nrepr/(2*spawns[0].memory.level)-merepr);
+            var reprscore = 100/(1+(nrepr-merepr)/(2*spawns[0].memory.level));
             //var gbgcscore = 100/ngbgd;
             //var ldgcscore = 100/nldgc;
             if (!powerneed) {
                 harvscore = 2;
-                upgdscore += 40;
+                upgdscore += 20;
                 bldrscore += 20;
             }
             else {
                 harvscore += 80;
-                upgdscore -= 10;
-                bldrscore -= 10;
+                upgdscore -= 20;
+                bldrscore -= 20;
             }
             if (buildneed > 0) {
-                bldrscore += 80;
+                bldrscore += 40;
             }
             else {
-                upgdscore += 30;
+                upgdscore += 40;
                 bldrscore = 2;
             }
             if (repairneed > 0) {
-                reprscore += 80;
+                reprscore += 40;
             }
             else {
+                upgdscore += 20;
                 reprscore = 2;
             }
             if (nharv == 0) {

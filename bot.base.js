@@ -2,7 +2,7 @@ var utilHelp = require("util.help");
 //builds roads needed for spawn activity
 var botBase = {
     run: function(s) {
-        if (!(Game.time % 121)) {
+        if (!(Game.time % 171)) {
             const r = s.room;
             var next = r.find(FIND_STRUCTURES, {
                 filter: (struct) => (struct.structureType == STRUCTURE_EXTENSION)

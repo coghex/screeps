@@ -14,10 +14,10 @@ var botCS = {
         const sources = s.room.find(FIND_SOURCES, {
             filter: (source) => (utilHelp.safePos(source.pos, source.room, 2) == 0)
         });
-        const nsources = sources.length;
+        const nsources = s.room.memory.maxnharvs.reduce((a,b) => a+b, 0);
         switch (lvl) {
             case (1):
-                if (nworker < (2*nsources-1)) {
+                if (nworker < (nsources/2)) {
                     if ((s.room.energyCapacityAvailable < 400) && (s.room.energyAvailable >= 300)) {
                         var name = "workerMkI#" + Game.time;
                         s.spawnCreep([WORK,CARRY,MOVE,MOVE,MOVE], name, { memory: { role: 'worker'
@@ -36,7 +36,7 @@ var botCS = {
                 }
                 break;
             case (2):
-                if (nworker < 2*nsources) {
+                if (nworker < nsources/2+1) {
                     if ((s.room.energyCapacityAvailable < 500) && (s.room.energyAvailable >= 400)) {
                         var name = "workerMkII#" + Game.time;
                         s.spawnCreep([WORK,WORK,CARRY,MOVE,MOVE,MOVE], name, { memory: { role: 'worker'
@@ -55,7 +55,7 @@ var botCS = {
                 }
                 break;
             case (3):
-                if (nworker < 3*nsources) {
+                if (nworker < nsources) {
                     if ((s.room.energyCapacityAvailable < 600) && (s.room.energyAvailable >= 500)) {
                         var name = "workerMkIII#" + Game.time;
                         s.spawnCreep([WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], name, { memory: { role: 'worker'
