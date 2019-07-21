@@ -194,10 +194,10 @@ var roleWorker = {
                 if (creep.memory.repairing && creep.carry.energy == 0) {
                     creep.memory.repairing = false;
                 }
-                if (!creep.memory.repairing && creep.carry.energy == creep.carryCapacity) {
+                if (!creep.memory.repairing && (creep.carry.energy >= creep.carryCapacity)) {
                     creep.memory.repairing = true;
                 }
-                if (creep.memeory.repairing) {
+                if (creep.memory.repairing) {
                     utilCreep.creepRepair(creep);
                 }
                 else {

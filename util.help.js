@@ -27,7 +27,9 @@ var utilHelp = {
             return;
         }
         if ((err==(-8)) || (err == (-14))) {
-            console.log("not ready for extensions yet");
+            if (Memory.debug > 3) {
+                console.log("not ready for extensions yet");
+            }
         }
         else if ((err == (-7)) || (err==(-10))) {
             if (Memory.debug > 3) {
