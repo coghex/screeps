@@ -134,7 +134,7 @@ var utilHelp = {
         const r = spawn.room;
         const sloc = spawn.pos;
         const cloc = r.controller.pos;
-        const path = r.findPath(sloc, cloc, {ignoreCreeps: true});
+        const path = r.findPath(sloc, cloc, {ignoreCreeps: true}).slice(1);
         for (var i in (path)) {
             var ret = 0;
             var pos = new RoomPosition(path[i].x, path[i].y, r.name);
@@ -159,7 +159,7 @@ var utilHelp = {
         for (var i in cloc) {
             const notsafe = utilHelp.safePos(cloc[i].pos, s, 2);
             if (!notsafe) {
-                var path = r.findPath(sloc, cloc[i].pos, {ignoreCreeps: true});
+                var path = r.findPath(sloc, cloc[i].pos, {ignoreCreeps: true}).slice(1);
                 path.pop();
                 for (var j in (path)) {
                     var ret = 0;
@@ -187,7 +187,7 @@ var utilHelp = {
         for (var i in cloc) {
             const notsafe = utilHelp.safePos(cloc[i].pos, s, 2);
             if (!notsafe) {
-                var path = r.findPath(sloc, cloc[i],pos, {ignoreCreeps: true});
+                var path = r.findPath(sloc, cloc[i],pos, {ignoreCreeps: true}).slice(1);
                 path.pop();
                 for (var j in (path)) {
                     var ret = 0;

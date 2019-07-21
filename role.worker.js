@@ -32,9 +32,10 @@ var roleWorker = {
         const nnull = arr.filter(j => (j == "null")).length;
 
         //every tick has a random chance of changing the job of a harvester,
-        //unless its null, then it automatically picks one.
-        const rand = Math.floor(Math.random()*10);
-        if ((creep.memory.job == "null") || ((Game.time % 10) == rand)) {
+        //unless its null, then it automatically picks one. random chance scales
+        //with number of creeps for cpu reasons
+        const rand = Math.floor(Math.random()*arr.length);
+        if ((creep.memory.job == "null") || ((Game.time % arr.length) == rand)) {
             if ((creep.hits < creep.hitsMax) && (creep.memory.job != "flee")) {
                 creep.memory.job = "flee";
                 creep.memory.utility = 100;
