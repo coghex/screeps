@@ -175,7 +175,7 @@ var utilCreep = {
                         shortest = i;
                     }
                 }
-                creep.memory.repairdest = target[shortest].id;
+                creep.memory.repairdest = targets[shortest].id;
                 if (creep.repair(targets[shortest]) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(targets[shortest]);
                 }
