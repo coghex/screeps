@@ -160,7 +160,7 @@ var utilCreep = {
                         creep.moveTo(targ);
                     }
                     else {
-                        creep.memory.dest = -1;
+                        creep.memory.dest = null;
                         creep.memory.utility = null;
                     }
                 }
@@ -180,7 +180,7 @@ var utilCreep = {
                     creep.moveTo(targets[shortest]);
                 }
                 else {
-                    creep.memory.dest = -1;
+                    creep.memory.dest = null;
                     creep.memory.utility += 5;
                 }
             }
