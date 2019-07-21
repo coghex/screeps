@@ -1,11 +1,11 @@
-var utilHelp = require('util.help');
+var utilCreep = require('util.creep');
 var botEmpire = require('bot.empire');
 const s = Game.spawns['Spawn1'];
 const debuglevel = 2;
 
 module.exports.loop = function () {
     if (Memory.init != null) {
-        utilHelp.freeCreepMemory();
+        utilCreep.freeCreepMemory();
         botEmpire.run();
     }
     else {

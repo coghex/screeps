@@ -1,18 +1,5 @@
 //random helper functions
 var utilHelp = {
-    // collects creep name garbage every 24 ticks
-    freeCreepMemory: function() {
-        if (!(Game.time % 24)) {
-            for (var name in Memory.creeps) {
-                if (!Game.creeps[name]) {
-                    delete Memory.creeps[name];
-                    if (Memory.debug > 2) {
-                        console.log("removing dead creep " + name);
-                    }
-                }
-            }
-        }
-    },
     // decides if the position is safe for n tiles around, returns the number of threats
     safePos: function(p, r, n) {
         const looplength = (n+1)*(n+1);
@@ -28,134 +15,6 @@ var utilHelp = {
             });
         }
         return ret;
-    },
-    // causes a creep to look for the nearest source and harvest it
-    creepGetEnergy: function(creep) {
-        const sources = creep.room.find(FIND_SOURCES);
-        if (creep.memory.dest == null) {
-            var source = sources[0];
-            var minlength = 100;
-            for (var i in sources) {
-                const length = creep.pos.findPathTo(sources[i].pos).length;
-                if (length < minlength) {
-                    if (creep.room.memory.nharvs[i] < creep.room.memory.maxnharvs[i]) {
-                        const ret = utilHelp.safePos(sources[i].pos, creep.room, 2);
-                        if (ret == 0) {
-                            source = sources[i];
-                            minlength = length;
-                            creep.memory.dest = i;
-                        }
-                    }
-                }
-            }
-        }
-        else {
-            var source = sources[creep.memory.dest];
-        }
-        if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(source);
-        }
-        else {
-            creep.memory.utility += 1;
-        }
-    },
-    // causes a creep to look for the nearest structure and transfers all energy to it
-    creepTransferToStructure: function(creep) {
-        var towers = creep.room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
-                return (structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
-            }
-        });
-        if (towers.length) {
-            if (creep.transfer(towers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(towers[0]);
-            }
-            else {
-                creep.memory.utility += 40;
-                return;
-            }
-        }
-        var exts = creep.room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
-                return (structure.structureType == STRUCTURE_EXTENSION) && structure.energy < structure.energyCapacity;
-            }
-        });       
-        if (exts.length) {
-            if (creep.transfer(exts[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(exts[0]);
-            }
-            else {
-                creep.memory.utility += 20;
-                return;
-            }
-        }
-        var spwns = creep.room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
-                return (structure.structureType == STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity;
-            }
-        });
-        if (spwns.length) {
-            if (creep.transfer(spwns[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(spwns[0]);
-            }
-            else {
-                creep.memory.utility += 10;
-                return;
-            }
-        }
-        else {
-            creep.memory.job = "null";
-            creep.memory.utility = -100;
-            return;
-        }       
-    },
-    creepBuild: function(creep) {
-        var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
-        if (targets.length) {
-            if (creep.memory.builddest != null) {
-                var target = Game.getObjectById(creep.memory.builddest);
-                if (target != null) {
-                    if (creep.build(target) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(target);
-                    }
-                    else {
-                        creep.memory.utility += 2;
-                    }
-                }
-                else {
-                    creep.memory.builddest = null;
-                }
-            }
-            else {
-                var mindist = 100;
-                var shortest = 0;
-                for (var i in targets) {
-                    var path = creep.room.findPath(targets[i].pos, creep.pos);
-                    if (targets[i].structureType == STRUCTURE_EXTENSION) {
-                        mindist = path.length;
-                        shortest = i
-                        break;
-                    }
-                    else {
-                        if (path.length < mindist) {
-                            mindist = path.length;
-                            shortest = i;
-                        }
-                    }
-                }
-                creep.memory.builddest = targets[shortest].id;
-                if (creep.build(targets[shortest]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[shortest]);
-                }
-                else {
-                    creep.memory.utility += 2;
-                }
-            }
-        }
-        else {
-            creep.memory.job = "null";
-            creep.memory.utility = -100;
-        }
     },
     // creates the construction site for the extensions
     buildExt: function(n, r, s, lvl) {
@@ -174,7 +33,7 @@ var utilHelp = {
             if (Memory.debug > 3) {
                 console.log("cant build at " + x + ", " + y + "... trying next location");
             }
-            utilHelp.buildExt((n+1),r,s);
+            utilHelp.buildExt((n+1),r,s,lvl);
         }
         else if (err==0) {
             if (Memory.debug > 3) {
@@ -233,6 +92,7 @@ var utilHelp = {
             const notsafe = utilHelp.safePos(cloc[i].pos, r, 2);
             if (!notsafe) {
                 var path = r.findPath(sloc, cloc[i].pos, {ignoreCreeps: true});
+                path.pop();
                 for (var j in (path)) {
                     var ret = 0;
                     var pos = new RoomPosition(path[j].x, path[j].y, r.name);
@@ -258,6 +118,7 @@ var utilHelp = {
             const notsafe = utilHelp.safePos(cloc[i].pos, r, 2);
             if (!notsafe) {
                 var path = r.findPath(sloc, cloc[i],pos, {ignoreCreeps: true});
+                path.pop();
                 for (var j in (path)) {
                     var ret = 0;
                     var pos = new RoomPosition(path[j].x, path[j].y, r.name);

@@ -57,9 +57,28 @@ var botCS = {
                     break;
                 case (3):
                     if (nworker < nsources) {
-                        if ((s.room.energyCapacityAvailable < 600) && (s.room.energyAvailable >= 500)) {
+                        if ((s.room.energyCapacityAvailable < 550) && (s.room.energyAvailable >= 500)) {
                             var name = "workerMkIII#" + Game.time;
                             s.spawnCreep([WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], name, { memory: { role: 'worker'
+                                                                                            , job : 'null'
+                                                                                            , utility: 0 } });
+                            if ((Memory.debug > 2)) {
+                                console.log("spawning creep " + name + " at " + s.name);
+                            }
+                        }
+                        else if (s.room.energyCapacityAvailable >= 550) {
+                            s.memory.level = 4;
+                            if ((Memory.debug > 1)) {
+                                console.log("spawn " + s,name + "has leveled up to 4...");
+                            }
+                        }
+                    }
+                    break;
+                case (4):
+                    if (nworker < nsources) {
+                        if ((s.room.energyCapacityAvailable < 600) && (s.room.energyAvailable >= 550)) {
+                            var name = "workerMkIII#" + Game.time;
+                            s.spawnCreep([WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE], name, { memory: { role: 'worker'
                                                                                             , job : 'null'
                                                                                             , utility: 0 } });
                             if ((Memory.debug > 2)) {
@@ -69,11 +88,12 @@ var botCS = {
                         else if (s.room.energyCapacityAvailable >= 600) {
                             s.memory.level = 4;
                             if ((Memory.debug > 1)) {
-                                console.log("spawn " + s,name + "has leveled up to 4...");
+                                console.log("spawn " + s,name + "has leveled up to 5...");
                             }
                         }
                     }
                     break;
+ 
                 default:
                     if (!Memory.halt) {
                         console.log("ERR: creepspawning level not defined");

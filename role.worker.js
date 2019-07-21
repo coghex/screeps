@@ -1,4 +1,5 @@
-var utilHelp = require("util.help");
+var utilHelp = require('util.help');
+var utilCreep = require('util.creep');
 // the worker is the standard citizen of the empire
 var roleWorker = {
     run: function(creep) {
@@ -74,9 +75,9 @@ var roleWorker = {
                     bldrscore += 20;
                 }
                 else {
-                    harvscore += 80;
-                    upgdscore -= 20;
-                    bldrscore -= 20;
+                    harvscore += 60;
+                    upgdscore -= 10;
+                    bldrscore -= 10;
                 }
                 if (buildneed > 0) {
                     bldrscore += 40;
@@ -147,10 +148,10 @@ var roleWorker = {
                     creep.memory.harvesting = true;
                 }
                 if (!creep.memory.harvesting) {
-                    utilHelp.creepGetEnergy(creep);
+                    utilCreep.creepGetEnergy(creep);
                 }
                 else {
-                    utilHelp.creepTransferToStructure(creep);
+                    utilCreep.creepTransferToStructure(creep);
                 }
                 break;
             // upgraders find energy and use it to upgrade the room's controller
@@ -171,7 +172,7 @@ var roleWorker = {
                     }
                 }
                 else {
-                    utilHelp.creepGetEnergy(creep);
+                    utilCreep.creepGetEnergy(creep);
                 }
                 break;
             case "bldr":
@@ -182,14 +183,26 @@ var roleWorker = {
                     creep.memory.building = true;
                 }
                 if (creep.memory.building) {
-                    utilHelp.creepBuild(creep);
+                    utilCreep.creepBuild(creep);
                 }
                 else {
-                    utilHelp.creepGetEnergy(creep)
+                    utilCreep.creepGetEnergy(creep);
                 }
                 
                 break;
             case "repr":
+                if (creep.memory.repairing && creep.carry.energy == 0) {
+                    creep.memory.repairing = false;
+                }
+                if (!creep.memory.repairing && creep.carry.energy == creep.carryCapacity) {
+                    creep.memory.repairing = true;
+                }
+                if (creep.memeory.repairing) {
+                    utilCreep.creepRepair(creep);
+                }
+                else {
+                    utilCreep.creepGetEnergy(creep);
+                }
                 break;
             // dont let it get here
             default:

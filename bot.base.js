@@ -4,9 +4,7 @@ var botBase = {
     run: function(s) {
         if (!(Game.time % 171)) {
             const r = s.room;
-            var next = r.find(FIND_STRUCTURES, {
-                filter: (struct) => (struct.structureType == STRUCTURE_EXTENSION)
-            });
+            var extlen = s.memory.ext.length;
             var nextcon = r.find(FIND_MY_CONSTRUCTION_SITES, {
                 filter: (site) => (site.structureType == STRUCTURE_EXTENSION)
             });
@@ -20,7 +18,7 @@ var botBase = {
                 //console.log("too early to build");
             }
             else {
-                utilHelp.buildExt(next.length, r, s, r.controller.level);
+                utilHelp.buildExt(extlen, r, s, r.controller.level);
             }
         }
         if (!(Game.time % 100)) {
