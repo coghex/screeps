@@ -9,6 +9,9 @@ var botSpawn = {
         const spawn = Game.getObjectById(s);
         spawn.memory.level = 1;
         utilInit.initSpawn(s);
+        if (spawn.room.memory.paths == null) {
+            //utilInit.initPath(s);
+        }
     },
     run: function(s) {
         const spawn = Game.getObjectById(s);

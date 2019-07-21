@@ -19,7 +19,7 @@ var botCS = {
             const nsources = spawn.room.memory.maxnharvs.reduce((a,b) => a+b, 0);
             switch (lvl) {
                 case (1):
-                    if (nworker < (5+(nsources/3))) {
+                    if (nworker < (4+(nsources/3))) {
                         if ((spawn.room.energyCapacityAvailable < 400) && (spawn.room.energyAvailable >= 300)) {
                             var name = "workerMkI#" + Game.time;
                             spawn.spawnCreep([WORK,CARRY,MOVE,MOVE,MOVE], name, { memory: { role: 'worker'
@@ -38,7 +38,7 @@ var botCS = {
                     }
                     break;
                 case (2):
-                    if (nworker < (4+(nsources/2))) {
+                    if (nworker < (3+(nsources/2))) {
                         if ((spawn.room.energyCapacityAvailable < 500) && (spawn.room.energyAvailable >= 400)) {
                             var name = "workerMkII#" + Game.time;
                             spawn.spawnCreep([WORK,WORK,CARRY,MOVE,MOVE,MOVE], name, { memory: { role: 'worker'
@@ -57,7 +57,7 @@ var botCS = {
                     }
                     break;
                 case (3):
-                    if (nworker < (3+(nsources/1))) {
+                    if (nworker < (2+(nsources/1))) {
                         if ((spawn.room.energyCapacityAvailable < 550) && (spawn.room.energyAvailable >= 500)) {
                             var name = "workerMkIII#" + Game.time;
                             spawn.spawnCreep([WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], name, { memory: { role: 'worker'
@@ -76,7 +76,7 @@ var botCS = {
                     }
                     break;
                 case (4):
-                    if (nworker < (2+(nsources))) {
+                    if (nworker < (1+(nsources))) {
                         if ((spawn.room.energyCapacityAvailable < 600) && (spawn.room.energyAvailable >= 550)) {
                             var name = "workerMkIII#" + Game.time;
                             spawn.spawnCreep([WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE], name, { memory: { role: 'worker'
