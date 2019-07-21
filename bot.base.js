@@ -72,9 +72,7 @@ var botBase = {
                     utilHelp.buildExtRoads(r);
                     utilHelp.buildRoadsAroundPos(0,r,r.controller.pos,2);
                     utilHelp.buildRoadsAroundPos(0,r,s.pos,2);
-                    var sources = r.find(FIND_STRUCTURES, {
-                        filter: (struct) => (struct.structureType == STRUCTURE_SPAWN)
-                    });
+                    var sources = r.find(FIND_SOURCES);
                     for (var i in sources) {
                         utilHelp.buildRoadsAroundPos(0,r,sources[i].pos,2);
                     }

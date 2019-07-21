@@ -75,7 +75,7 @@ var botCS = {
                     }
                     break;
                 case (4):
-                    if (nworker < nsources) {
+                    if (nworker < (1+(nsources/2))) {
                         if ((s.room.energyCapacityAvailable < 600) && (s.room.energyAvailable >= 550)) {
                             var name = "workerMkIII#" + Game.time;
                             s.spawnCreep([WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE], name, { memory: { role: 'worker'
