@@ -1,7 +1,11 @@
 // some random init scripts
 var utilInit = {
     //sets the source info for the creeps
-    initSpawn: function(spawn) {
+    initSpawn: function(s) {
+        const spawn = Game.getObjectById(s);
+        if (spawn == null) {
+            console.log("ERR: no spawns");
+        }
         spawn.room.memory = { "sourceid" : [], "maxnharvs" : [], "nharvs" : [] };
         const terrain = spawn.room.getTerrain();
         var sources = spawn.room.find(FIND_SOURCES);
@@ -44,6 +48,7 @@ var utilInit = {
             return 0;
         }
         spawn.memory.ext = [];
+        spawn.memory.towers = [];
         spawn.memory.extcon = 0;
         spawn.memory.contcon = 0;
         spawn.memory.spawncon = 0;

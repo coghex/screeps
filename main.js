@@ -4,6 +4,9 @@ const s = Game.spawns['Spawn1'];
 const debuglevel = 2;
 
 module.exports.loop = function () {
+    if (s == null) {
+        console.log("ERR: no spawn");
+    }
     if (Memory.init != null) {
         utilCreep.freeCreepMemory();
         botEmpire.run();
@@ -13,7 +16,7 @@ module.exports.loop = function () {
         if (Memory.debug) {
             console.log("initializing the empire...");
         }
-        botEmpire.init(s);
+        botEmpire.init(s.id);
         Memory.init = 1;
     }
 }

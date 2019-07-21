@@ -3,11 +3,11 @@ var roleWorker = require('role.worker');
 //creeps attempt to maximize utility wherever they are, they know
 //no home (spawn or colony) other than the empire.
 var botCreep = {
-    run: function(s) {
+    run: function() {
         for (var name in Game.creeps) {
             var creep = Game.creeps[name];
             if (creep.memory.role == 'worker') {
-                roleWorker.run(creep);
+                roleWorker.run(creep.id);
             }
             else {
                 if (!Memory.halt) {

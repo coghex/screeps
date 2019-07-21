@@ -15,8 +15,10 @@ var utilCreep = {
         }
     },
     // causes a creep to look for the nearest source and harvest it
-    creepGetEnergy: function(creep) {
+    creepGetEnergy: function(c) {
+        const creep = Game.getObjectById(c);
         const sources = creep.room.find(FIND_SOURCES);
+        const spawn = creep.room.find(FIND_MY_SPAWNS);
         if (creep.memory.dest == null) {
             var source = sources[0];
             var minlength = 100;
@@ -25,7 +27,7 @@ var utilCreep = {
                     const length = creep.pos.findPathTo(sources[i].pos).length;
                     if (length < minlength) {
                         if (creep.room.memory.nharvs[i] < creep.room.memory.maxnharvs[i]) {
-                            const ret = utilHelp.safePos(sources[i].pos, creep.room, 2);
+                            const ret = utilHelp.safePos(sources[i].pos, spawn[0].id, 2);
                             if (ret == 0) {
                                 source = sources[i];
                                 minlength = length;
@@ -51,7 +53,8 @@ var utilCreep = {
         }
     },
     // causes a creep to look for the nearest structure and transfers all energy to it
-    creepTransferToStructure: function(creep) {
+    creepTransferToStructure: function(c) {
+        const creep = Game.getObjectById(c);
         var towers = creep.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return (structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
@@ -101,7 +104,8 @@ var utilCreep = {
         }       
     },
     // builds nearest constuction site, extensions first
-    creepBuild: function(creep) {
+    creepBuild: function(c) {
+        const creep = Game.getObjectById(c);
         var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
         if (targets.length) {
             if (creep.memory.builddest != null) {
@@ -150,7 +154,8 @@ var utilCreep = {
         }
     },
     // repairs the nearest thing that needs repairing
-    creepRepair: function(creep) {
+    creepRepair: function(c) {
+        const creep = Game.getObjectById(c);
         var targets = creep.room.find(FIND_STRUCTURES, {
             filter: object => object.hits < (object.hitsMax-800)
         });

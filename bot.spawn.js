@@ -6,15 +6,19 @@ var botCS = require('bot.cs');
 //spawns attempt to maximize their own utility with no knowledge of others
 var botSpawn = {
     init: function(s) {
-        s.memory.level = 1;
+        const spawn = Game.getObjectById(s);
+        spawn.memory.level = 1;
         utilInit.initSpawn(s);
     },
     run: function(s) {
-        // set nharvs every tick
-        var r = s.room;
-        var sources = r.find(FIND_SOURCES);
-        for (var i in sources) {
-            utilHelp.setNHarv(r, sources, i);
+        const spawn = Game.getObjectById(s);
+        // set nharvs every few ticks
+        if (!(Game.time % 3)) {
+            var r = spawn.room;
+            var sources = r.find(FIND_SOURCES);
+            for (var i in sources) {
+                utilHelp.setNHarv(s, i);
+            }
         }
         botBase.run(s);
         botCS.run(s);

@@ -2,7 +2,14 @@ var utilHelp = require('util.help');
 var utilCreep = require('util.creep');
 // the worker is the standard citizen of the empire
 var roleWorker = {
-    run: function(creep) {
+    run: function(c) {
+        if (c == null) {
+            if (Memory.debug > 3) {
+                console.log("creep initializing...");
+            }
+            return;
+        }
+        const creep = Game.getObjectById(c);
         var arr = [];
         for (const i in Game.creeps) {
             if (Game.creeps[i].memory.job != null) {
@@ -148,10 +155,10 @@ var roleWorker = {
                     creep.memory.harvesting = true;
                 }
                 if (!creep.memory.harvesting) {
-                    utilCreep.creepGetEnergy(creep);
+                    utilCreep.creepGetEnergy(c);
                 }
                 else {
-                    utilCreep.creepTransferToStructure(creep);
+                    utilCreep.creepTransferToStructure(c);
                 }
                 break;
             // upgraders find energy and use it to upgrade the room's controller
@@ -172,7 +179,7 @@ var roleWorker = {
                     }
                 }
                 else {
-                    utilCreep.creepGetEnergy(creep);
+                    utilCreep.creepGetEnergy(c);
                 }
                 break;
             case "bldr":
@@ -183,10 +190,10 @@ var roleWorker = {
                     creep.memory.building = true;
                 }
                 if (creep.memory.building) {
-                    utilCreep.creepBuild(creep);
+                    utilCreep.creepBuild(c);
                 }
                 else {
-                    utilCreep.creepGetEnergy(creep);
+                    utilCreep.creepGetEnergy(c);
                 }
                 
                 break;
@@ -198,10 +205,10 @@ var roleWorker = {
                     creep.memory.repairing = true;
                 }
                 if (creep.memory.repairing) {
-                    utilCreep.creepRepair(creep);
+                    utilCreep.creepRepair(c);
                 }
                 else {
-                    utilCreep.creepGetEnergy(creep);
+                    utilCreep.creepGetEnergy(c);
                 }
                 break;
             // dont let it get here
