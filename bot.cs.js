@@ -18,7 +18,7 @@ var botCS = {
             const nsources = s.room.memory.maxnharvs.reduce((a,b) => a+b, 0);
             switch (lvl) {
                 case (1):
-                    if (nworker < (nsources/2)) {
+                    if (nworker < (3+(nsources/4))) {
                         if ((s.room.energyCapacityAvailable < 400) && (s.room.energyAvailable >= 300)) {
                             var name = "workerMkI#" + Game.time;
                             s.spawnCreep([WORK,CARRY,MOVE,MOVE,MOVE], name, { memory: { role: 'worker'
@@ -37,7 +37,7 @@ var botCS = {
                     }
                     break;
                 case (2):
-                    if (nworker < nsources/2+1) {
+                    if (nworker < (2+(nsources/3))) {
                         if ((s.room.energyCapacityAvailable < 500) && (s.room.energyAvailable >= 400)) {
                             var name = "workerMkII#" + Game.time;
                             s.spawnCreep([WORK,WORK,CARRY,MOVE,MOVE,MOVE], name, { memory: { role: 'worker'
@@ -56,7 +56,7 @@ var botCS = {
                     }
                     break;
                 case (3):
-                    if (nworker < nsources) {
+                    if (nworker < (1+(nsources/2))) {
                         if ((s.room.energyCapacityAvailable < 550) && (s.room.energyAvailable >= 500)) {
                             var name = "workerMkIII#" + Game.time;
                             s.spawnCreep([WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], name, { memory: { role: 'worker'
@@ -69,7 +69,7 @@ var botCS = {
                         else if (s.room.energyCapacityAvailable >= 550) {
                             s.memory.level = 4;
                             if ((Memory.debug > 1)) {
-                                console.log("spawn " + s,name + "has leveled up to 4...");
+                                console.log("spawn " + s.name + " has leveled up to 4...");
                             }
                         }
                     }
@@ -88,7 +88,7 @@ var botCS = {
                         else if (s.room.energyCapacityAvailable >= 600) {
                             s.memory.level = 4;
                             if ((Memory.debug > 1)) {
-                                console.log("spawn " + s,name + "has leveled up to 5...");
+                                console.log("spawn " + s.name + " has leveled up to 5...");
                             }
                         }
                     }

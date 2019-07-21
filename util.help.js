@@ -47,6 +47,16 @@ var utilHelp = {
             console.log("ERR: undefined api error");
         }
     },
+    // builds roads in a radius around the position
+    buildRoadsAroundPos(n,r,p,rad) {
+        if (n >= ((2*rad+1)*(2*rad+1))) {
+            return;
+        }
+        var nx = (n % (2*rad+1)) - (rad);
+        var ny = Math.floor(n / (2*rad+1)) - (rad);
+        utilHelp.buildRoad(r, p.x+nx, p.y+ny);
+        utilHelp.buildRoadsAroundPos((n+1),r,p,rad);
+    },
     // builds roads around the spawn and extensions
     buildExtRoads: function(r) {
         const exts = r.find(FIND_STRUCTURES, {

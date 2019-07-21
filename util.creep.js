@@ -21,14 +21,16 @@ var utilCreep = {
             var source = sources[0];
             var minlength = 100;
             for (var i in sources) {
-                const length = creep.pos.findPathTo(sources[i].pos).length;
-                if (length < minlength) {
-                    if (creep.room.memory.nharvs[i] < creep.room.memory.maxnharvs[i]) {
-                        const ret = utilHelp.safePos(sources[i].pos, creep.room, 2);
-                        if (ret == 0) {
-                            source = sources[i];
-                            minlength = length;
-                            creep.memory.dest = i;
+                if (sources[i].energy) {
+                    const length = creep.pos.findPathTo(sources[i].pos).length;
+                    if (length < minlength) {
+                        if (creep.room.memory.nharvs[i] < creep.room.memory.maxnharvs[i]) {
+                            const ret = utilHelp.safePos(sources[i].pos, creep.room, 2);
+                            if (ret == 0) {
+                                source = sources[i];
+                                minlength = length;
+                                creep.memory.dest = i;
+                            }
                         }
                     }
                 }
@@ -37,8 +39,12 @@ var utilCreep = {
         else {
             var source = sources[creep.memory.dest];
         }
-        if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
+        const err = creep.harvest(source);
+        if (err == ERR_NOT_IN_RANGE) {
             creep.moveTo(source);
+        }
+        else if (err == ERR_NOT_ENOUGH_RESOURCES) {
+            creep.memory.dest = null;
         }
         else {
             creep.memory.utility += 1;
