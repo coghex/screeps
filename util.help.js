@@ -95,12 +95,13 @@ var utilHelp = {
     buildRoadsAroundPos(n,s,p,rad) {
         const spawn = Game.getObjectById(s);
         const r = spawn.room;
+        const t = Game.map.getRoomTerrain(r.name);
         if (n >= ((2*rad+1)*(2*rad+1))) {
             return;
         }
-        if (r.lookForAt(LOOK_WALL, p).length) {
-            var nx = (n % (2*rad+1)) - (rad);
-            var ny = Math.floor(n / (2*rad+1)) - (rad);
+        var nx = (n % (2*rad+1)) - (rad);
+        var ny = Math.floor(n / (2*rad+1)) - (rad);
+        if (t.get(p.x+nx, p.y+ny) != TERRAIN_MASK_WALL) {
             utilHelp.buildRoad(s, p.x+nx, p.y+ny);
         }
         utilHelp.buildRoadsAroundPos((n+1),s,p,rad);
